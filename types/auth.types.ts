@@ -1,8 +1,10 @@
 export type Role = "admin" | "comprador" | "ti" | "fornecedor";
 
 export interface AuthUser {
-  userId: string;
+  id: number;
+  nome: string;
   username: string;
+  codigoInterno: string;
   roles: Role[];
   origin?: "local" | "hub";
 }
