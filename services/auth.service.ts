@@ -52,7 +52,7 @@ export function logout() {
 }
 
 export async function getProfile(): Promise<AuthUser> {
-  const response = await apiClient.get<AuthUser>("/auth/me");
+  const response = await apiClient.get<AuthUser>("/users/me");
 
   return response.data;
 }

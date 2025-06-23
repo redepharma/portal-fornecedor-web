@@ -1,6 +1,14 @@
 "use client";
 
-import { Button, Card, CardBody, CardHeader, Input } from "@heroui/react";
+import {
+  addToast,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Input,
+  Spinner,
+} from "@heroui/react";
 import { LogIn } from "lucide-react";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -14,24 +22,53 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     setErro("");
 
+    // ⚠️ Validação básica
+    if (!username.trim() || !senha.trim()) {
+      addToast({
+        title: "Campos obrigatórios",
+        description: "Informe seu usuário e senha para continuar.",
+        color: "danger",
+      });
+
+      return;
+    }
+
+    setLoading(true);
+
     try {
       await login(username, senha);
-      router.push("/"); // Redireciona para home após login
+
+      addToast({
+        title: "Login realizado com sucesso!",
+        description: "Redirecionando...",
+        color: "success",
+      });
+
+      router.push("/");
     } catch (err: any) {
-      console.error("Erro ao logar:", err);
-      setErro(err.message || "Erro inesperado ao autenticar.");
+      const msg = err.message || "Erro inesperado ao autenticar.";
+
+      setErro(msg);
+
+      addToast({
+        title: "Erro ao autenticar",
+        description: msg,
+        color: "danger",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-      <Card className="max-w-md w-full border bg-white shadow-xl rounded-2xl">
-        <CardHeader className="text-center space-y-2">
-          <LogIn className="mx-auto text-primary" size={36} />
+      <Card className="max-w-sm w-full p-4 border bg-white shadow-xl rounded-2xl">
+        <CardHeader className="flex flex-col items-start">
           <h1 className="text-2xl font-semibold text-slate-800">
             Entrar no sistema
           </h1>
@@ -64,10 +101,12 @@ export default function LoginPage() {
 
           <Button
             className="w-full"
-            isLoading={status === "loading"}
+            color="primary"
+            disabled={loading}
+            isLoading={loading}
             onPress={handleLogin}
           >
-            Entrar
+            {loading ? <Spinner color="white" size="sm" /> : "Entrar"}
           </Button>
         </CardBody>
       </Card>
