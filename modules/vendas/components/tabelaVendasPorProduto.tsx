@@ -75,9 +75,16 @@ export function TabelaVendasPorProduto({
   return (
     <>
       <div className="flex flex-row justify-between items-center mb-2">
-        <h2 className="text-lg text-zinc-800 font-semibold">
-          Vendas por produto
-        </h2>
+        <div>
+          <h2 className="text-lg text-zinc-800 font-semibold">
+            Vendas por produto
+          </h2>
+          <p className="text-sm text-slate-700">
+            Exibindo {vendas.length === 0 ? 0 : (pagina - 1) * porPagina + 1}–
+            {(pagina - 1) * porPagina + vendasPaginadas.length} de{" "}
+            {vendas.length} resultados
+          </p>
+        </div>
         <Button
           color="primary"
           size="sm"

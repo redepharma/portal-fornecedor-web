@@ -11,7 +11,7 @@ import {
   Tab,
   Tabs,
 } from "@heroui/react";
-import { Search } from "lucide-react";
+import { Eraser, Search } from "lucide-react";
 
 import { withRoleProtection } from "@/hoc/withRoleProtection";
 import DefaultLayout from "@/layouts/default";
@@ -80,7 +80,7 @@ function FornecedorEstoque() {
         addToast({
           title: "Consulta concluída",
           description: `Foram encontrados ${resposta.length} registros de estoque.`,
-          color: "success",
+          color: "default",
         });
       }
     } catch (err: any) {
@@ -99,6 +99,17 @@ function FornecedorEstoque() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLimparFiltros = () => {
+    setSelecionados(new Set([]));
+    setEstoque([]);
+    setPagina(1);
+
+    addToast({
+      title: "Filtros limpos",
+      description: "A seleção de fabricantes foi resetada.",
+    });
   };
 
   return (
@@ -123,14 +134,25 @@ function FornecedorEstoque() {
               <SelectItem key={fab.CD_FABRIC}>{fab.NM_FABRIC}</SelectItem>
             ))}
           </Select>
-          <div className="mb-6">
+          <div className="flex mb-6 gap-4">
             <Button
+              className="w-full"
               color="primary"
               isLoading={loading}
               startContent={<Search size={16} />}
               type="submit"
             >
               Buscar
+            </Button>
+            <Button
+              className="w-full"
+              color="default"
+              isDisabled={loading}
+              startContent={<Eraser color="#5e5c64" size={16} />}
+              variant="ghost"
+              onPress={handleLimparFiltros}
+            >
+              Limpar
             </Button>
           </div>
         </form>

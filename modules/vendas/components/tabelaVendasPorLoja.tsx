@@ -11,12 +11,13 @@ import {
   Spinner,
   Button,
   getKeyValue,
+  Divider,
 } from "@heroui/react";
 import { useAsyncList } from "@react-stately/data";
 import { useEffect, useMemo } from "react";
+import { ArrowDownToLine } from "lucide-react";
 
 import { IVendaComEAN } from "@/modules/vendas/types/vendaComEan.interface";
-import { ArrowDownToLine } from "lucide-react";
 
 interface Props {
   vendas: IVendaComEAN[];
@@ -92,10 +93,18 @@ export function TabelaVendasPorLoja({
           Baixar Excel
         </Button>
       </div>
-      <p className="text-sm text-slate-600 font-medium mb-2">
-        Total de vendas líquidas no período:{" "}
-        <strong>R${totalLiquido.toFixed(2)}</strong>
-      </p>
+      <div className="flex gap-2">
+        <p className="text-sm text-slate-600 font-medium">
+          Total de vendas líquidas no período:{" "}
+          <strong>R${totalLiquido.toFixed(2)}</strong>
+        </p>
+        <Divider className="mx-2" orientation="vertical" />
+        <p className="text-sm text-slate-700 mb-2">
+          Exibindo {vendas.length === 0 ? 0 : (pagina - 1) * porPagina + 1}–
+          {(pagina - 1) * porPagina + vendasPaginadas.length} de {vendas.length}{" "}
+          resultados
+        </p>
+      </div>
 
       <Table
         isStriped

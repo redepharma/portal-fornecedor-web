@@ -74,7 +74,7 @@ export function TabelaEstoquePorLoja({
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-2">
+      <div className="flex justify-between items-center">
         <h2 className="text-lg text-zinc-800 font-semibold">
           Estoque por filial
         </h2>
@@ -86,6 +86,11 @@ export function TabelaEstoquePorLoja({
           Baixar Excel
         </Button>
       </div>
+      <p className="text-sm text-slate-700 mb-2">
+        Exibindo {estoque.length === 0 ? 0 : (pagina - 1) * porPagina + 1}–
+        {(pagina - 1) * porPagina + paginados.length} de {estoque.length}{" "}
+        resultados
+      </p>
 
       <Table
         isStriped

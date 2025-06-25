@@ -14,7 +14,7 @@ import {
 } from "@heroui/react";
 import { DateValue } from "@internationalized/date";
 import { Select, SelectItem } from "@heroui/react";
-import { Search } from "lucide-react";
+import { Eraser, Search } from "lucide-react";
 
 import { VendaService } from "@/modules/vendas/vendas.service";
 import { withRoleProtection } from "@/hoc/withRoleProtection";
@@ -61,6 +61,7 @@ function FornecedorVendas() {
         description:
           "Selecione uma data de início e fim para consultar as vendas.",
       });
+
       return;
     }
 
@@ -112,6 +113,18 @@ function FornecedorVendas() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLimparFiltros = () => {
+    setSelecionados(new Set([]));
+    setDataRange(null);
+    setVendas([]);
+    setPagina(1);
+
+    addToast({
+      title: "Filtros limpos",
+      description: "Seleção de fabricantes e datas foi reiniciada.",
+    });
   };
 
   return (
@@ -166,6 +179,16 @@ function FornecedorVendas() {
               type="submit"
             >
               Buscar
+            </Button>
+            <Button
+              className="mt-2 w-full"
+              color="default"
+              isDisabled={loading}
+              startContent={<Eraser color="#5e5c64" size={16} />}
+              variant="ghost"
+              onPress={handleLimparFiltros}
+            >
+              Limpar
             </Button>
           </div>
         </form>
