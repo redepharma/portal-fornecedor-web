@@ -14,4 +14,5 @@ export interface AuthContextData {
   status: "loading" | "authenticated" | "unauthenticated";
   login: (username: string, senha: string) => Promise<void>;
   logout: () => void;
+  setUser: (user: AuthUser | null) => void;
 }
