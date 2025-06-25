@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Table,
   TableHeader,
@@ -8,7 +10,11 @@ import {
   Pagination,
   Spinner,
   Button,
+  getKeyValue,
 } from "@heroui/react";
+import { useAsyncList } from "@react-stately/data";
+import { useMemo } from "react";
+
 import { IVendaComEAN } from "@/modules/vendas/types/vendaComEan.interface";
 
 interface Props {
@@ -26,24 +32,51 @@ export function TabelaVendasPorLoja({
   setPagina,
   loading,
 }: Props) {
-  const totalPaginas = Math.ceil(vendas.length / porPagina);
+  const totalLiquido = useMemo(
+    () => vendas.reduce((soma, v) => soma + (v.VLR_LIQ_VD || 0), 0),
+    [vendas]
+  );
 
-  const vendasPaginadas = vendas
-    .slice((pagina - 1) * porPagina, pagina * porPagina)
-    .map((item, index) => ({
-      ...item,
-      __key: `${item.CD_PROD}-${item.EAN ?? "sem-ean"}-${item.CD_FILIAL ?? "sem-filial"}-${index}`,
-    }));
+  const list = useAsyncList({
+    async load() {
+      return {
+        items: vendas.map((item, index) => ({
+          ...item,
+          __key: `${item.CD_PROD}-${item.EAN ?? "sem-ean"}-${
+            item.CD_FILIAL ?? "sem-filial"
+          }-${index}`,
+        })),
+      };
+    },
+    async sort({ items, sortDescriptor }) {
+      return {
+        items: [...items].sort((a, b) => {
+          let aVal = getKeyValue(a, sortDescriptor.column);
+          let bVal = getKeyValue(b, sortDescriptor.column);
 
-  const totalLiquido = vendas.reduce(
-    (soma, v) => soma + (v.VLR_LIQ_VD || 0),
-    0
+          if (typeof aVal === "number" && typeof bVal === "number") {
+            return sortDescriptor.direction === "ascending"
+              ? aVal - bVal
+              : bVal - aVal;
+          }
+
+          return sortDescriptor.direction === "ascending"
+            ? String(aVal).localeCompare(String(bVal))
+            : String(bVal).localeCompare(String(aVal));
+        }),
+      };
+    },
+  });
+
+  const totalPaginas = Math.ceil(list.items.length / porPagina);
+  const vendasPaginadas = list.items.slice(
+    (pagina - 1) * porPagina,
+    pagina * porPagina
   );
 
   return (
     <div className="mt-4">
       <div className="flex justify-between items-center mb-2">
-        {" "}
         <p className="text-sm text-gray-600 font-medium mb-2">
           O total de vendas líquidas no período:{" "}
           <strong>R${totalLiquido.toFixed(2)}</strong>
@@ -52,35 +85,50 @@ export function TabelaVendasPorLoja({
           Baixar Excel
         </Button>
       </div>
+
       <Table
         isHeaderSticky
         isStriped
+        aria-label="Tabela de vendas por loja com ordenação"
         className="max-h-[450px]"
         maxTableHeight={450}
         shadow="sm"
+        sortDescriptor={list.sortDescriptor}
+        onSortChange={list.sort}
       >
         <TableHeader>
-          <TableColumn>Filial</TableColumn>
-          <TableColumn>Código</TableColumn>
-          <TableColumn>EAN</TableColumn>
-          <TableColumn>Descricao</TableColumn>
-          <TableColumn>Quantidade</TableColumn>
-          <TableColumn>Valor Liquido</TableColumn>
-          <TableColumn>Valor Total</TableColumn>
+          <TableColumn key="CD_FILIAL" allowsSorting>
+            Filial
+          </TableColumn>
+          <TableColumn key="CD_PROD" allowsSorting>
+            Código
+          </TableColumn>
+          <TableColumn key="EAN" allowsSorting>
+            EAN
+          </TableColumn>
+          <TableColumn key="DS_PROD" allowsSorting>
+            Descrição
+          </TableColumn>
+          <TableColumn key="QT_IT" allowsSorting>
+            Quantidade
+          </TableColumn>
+          <TableColumn key="VLR_LIQ_VD" allowsSorting>
+            Valor Líquido
+          </TableColumn>
+          <TableColumn key="VLR_VD" allowsSorting>
+            Valor Total
+          </TableColumn>
         </TableHeader>
+
         <TableBody
           emptyContent={loading ? <Spinner /> : "Sem resultados"}
           items={vendasPaginadas}
         >
           {(item) => (
             <TableRow key={item.__key}>
-              <TableCell>{item.CD_FILIAL ?? "-"}</TableCell>
-              <TableCell>{item.CD_PROD}</TableCell>
-              <TableCell>{item.EAN ?? "-"}</TableCell>
-              <TableCell>{item.DS_PROD}</TableCell>
-              <TableCell>{item.QT_IT}</TableCell>
-              <TableCell>{item.VLR_LIQ_VD.toFixed(2)}</TableCell>
-              <TableCell>{item.VLR_VD.toFixed(2)}</TableCell>
+              {(columnKey) => (
+                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+              )}
             </TableRow>
           )}
         </TableBody>

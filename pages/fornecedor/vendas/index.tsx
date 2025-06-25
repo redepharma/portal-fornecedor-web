@@ -83,7 +83,7 @@ function FornecedorVendas() {
 
   return (
     <DefaultLayout>
-      <h1 className="text-4xl text-gray-400 font-bold">VENDAS</h1>
+      <h1 className="text-4xl text-zinc-700 font-bold">VENDAS</h1>
       <p className="text-sm text-slate-500">
         Exibição de vendas por período, agrupadas por produto e por loja
       </p>

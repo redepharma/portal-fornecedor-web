@@ -10,7 +10,9 @@ import {
   Pagination,
   Spinner,
   Button,
+  getKeyValue,
 } from "@heroui/react";
+import { useAsyncList } from "@react-stately/data";
 
 import { IVendaComEAN } from "@/modules/vendas/types/vendaComEan.interface";
 
@@ -29,9 +31,37 @@ export function TabelaVendasPorProduto({
   setPagina,
   loading,
 }: TabelaVendasProps) {
-  const totalPaginas = Math.ceil(vendas.length / porPagina);
+  const list = useAsyncList({
+    async load() {
+      return {
+        items: vendas.map((item, index) => ({
+          ...item,
+          __key: `${item.CD_PROD}-${item.EAN ?? "sem-ean"}-${index}`,
+        })),
+      };
+    },
+    async sort({ items, sortDescriptor }) {
+      return {
+        items: [...items].sort((a, b) => {
+          let aVal = getKeyValue(a, sortDescriptor.column);
+          let bVal = getKeyValue(b, sortDescriptor.column);
 
-  const vendasPaginadas = vendas.slice(
+          if (typeof aVal === "number" && typeof bVal === "number") {
+            return sortDescriptor.direction === "ascending"
+              ? aVal - bVal
+              : bVal - aVal;
+          }
+
+          return sortDescriptor.direction === "ascending"
+            ? String(aVal).localeCompare(String(bVal))
+            : String(bVal).localeCompare(String(aVal));
+        }),
+      };
+    },
+  });
+
+  const totalPaginas = Math.ceil(list.items.length / porPagina);
+  const vendasPaginadas = list.items.slice(
     (pagina - 1) * porPagina,
     pagina * porPagina
   );
@@ -43,36 +73,47 @@ export function TabelaVendasPorProduto({
           Baixar Excel
         </Button>
       </div>
+
       <Table
         isHeaderSticky
         isStriped
+        aria-label="Tabela de vendas por produto com ordenação"
         className="max-h-[450px]"
         maxTableHeight={450}
         shadow="sm"
+        sortDescriptor={list.sortDescriptor}
+        onSortChange={list.sort}
       >
         <TableHeader>
-          <TableColumn>Código</TableColumn>
-          <TableColumn>EAN</TableColumn>
-          <TableColumn>Descrição</TableColumn>
-          <TableColumn>Quantidade</TableColumn>
-          <TableColumn>Valor Líquido</TableColumn>
-          <TableColumn>Valor Total</TableColumn>
+          <TableColumn key="CD_PROD" allowsSorting>
+            Código
+          </TableColumn>
+          <TableColumn key="EAN" allowsSorting>
+            EAN
+          </TableColumn>
+          <TableColumn key="DS_PROD" allowsSorting>
+            Descrição
+          </TableColumn>
+          <TableColumn key="QT_IT" allowsSorting>
+            Quantidade
+          </TableColumn>
+          <TableColumn key="VLR_LIQ_VD" allowsSorting>
+            Valor Líquido
+          </TableColumn>
+          <TableColumn key="VLR_VD" allowsSorting>
+            Valor Total
+          </TableColumn>
         </TableHeader>
+
         <TableBody
           emptyContent={loading ? <Spinner /> : "Sem resultados"}
-          items={vendasPaginadas.map((item, index) => ({
-            ...item,
-            __key: `${item.CD_PROD}-${item.EAN ?? "sem-ean"}-${index}`,
-          }))}
+          items={vendasPaginadas}
         >
           {(item) => (
             <TableRow key={item.__key}>
-              <TableCell>{item.CD_PROD}</TableCell>
-              <TableCell>{item.EAN ?? "-"}</TableCell>
-              <TableCell>{item.DS_PROD}</TableCell>
-              <TableCell>{item.QT_IT}</TableCell>
-              <TableCell>{item.VLR_LIQ_VD.toFixed(2)}</TableCell>
-              <TableCell>{item.VLR_VD.toFixed(2)}</TableCell>
+              {(columnKey) => (
+                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+              )}
             </TableRow>
           )}
         </TableBody>
