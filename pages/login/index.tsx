@@ -44,22 +44,25 @@ export default function LoginPage() {
 
       addToast({
         title: "Login realizado com sucesso!",
-        description: "Redirecionando...",
         color: "success",
       });
 
       router.push("/");
     } catch (err: any) {
-      const msg = err.message || "Erro inesperado ao autenticar.";
+      const mensagem =
+        err?.response?.data?.mensagem || err?.mensagem || "Erro ao autenticar.";
+      const detalhe =
+        err?.response?.data?.detalhe ||
+        "Verifique suas credenciais e tente novamente.";
 
-      setErro(msg);
+      setErro(mensagem);
 
       addToast({
-        title: "Erro ao autenticar",
-        description: msg,
+        title: mensagem,
+        description: detalhe,
         color: "danger",
       });
-    } finally {
+
       setLoading(false);
     }
   };

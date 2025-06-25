@@ -2,7 +2,15 @@
 import type { Selection } from "@heroui/react";
 
 import { useEffect, useState } from "react";
-import { Button, Divider, Select, SelectItem, Tab, Tabs } from "@heroui/react";
+import {
+  addToast,
+  Button,
+  Divider,
+  Select,
+  SelectItem,
+  Tab,
+  Tabs,
+} from "@heroui/react";
 import { Search } from "lucide-react";
 
 import { withRoleProtection } from "@/hoc/withRoleProtection";
@@ -39,15 +47,55 @@ function FornecedorEstoque() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const selecionadosArray = Array.from(selecionados);
+
+    if (selecionadosArray.length === 0) {
+      addToast({
+        title: "Seleção obrigatória",
+        description:
+          "Selecione pelo menos um fabricante para consultar o estoque.",
+        color: "danger",
+      });
+
+      return;
+    }
+
     setLoading(true);
     setEstoque([]);
 
     try {
       const resposta = await EstoqueService.consultarEstoque(
-        Array.from(selecionados).map(String)
+        selecionadosArray.map(String)
       );
 
       setEstoque(resposta);
+
+      if (resposta.length === 0) {
+        addToast({
+          title: "Nenhum resultado encontrado",
+          description:
+            "Não há dados de estoque para os fabricantes selecionados.",
+        });
+      } else {
+        addToast({
+          title: "Consulta concluída",
+          description: `Foram encontrados ${resposta.length} registros de estoque.`,
+          color: "success",
+        });
+      }
+    } catch (err: any) {
+      const mensagem =
+        err?.response?.data?.mensagem ||
+        err?.mensagem ||
+        "Erro ao consultar o estoque.";
+      const detalhe =
+        err?.response?.data?.detalhe || "Tente novamente mais tarde.";
+
+      addToast({
+        title: mensagem,
+        description: detalhe,
+        color: "danger",
+      });
     } finally {
       setLoading(false);
     }

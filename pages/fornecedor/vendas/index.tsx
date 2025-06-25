@@ -4,6 +4,7 @@ import type { Selection } from "@heroui/react";
 
 import { useEffect, useState } from "react";
 import {
+  addToast,
   Button,
   DateRangePicker,
   Divider,
@@ -53,7 +54,15 @@ function FornecedorVendas() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!dataRange?.start || !dataRange?.end) return;
+
+    if (!dataRange?.start || !dataRange?.end) {
+      addToast({
+        title: "Período obrigatório",
+        description:
+          "Selecione uma data de início e fim para consultar as vendas.",
+      });
+      return;
+    }
 
     setLoading(true);
     setVendas([]);
@@ -61,23 +70,48 @@ function FornecedorVendas() {
     const dataInicio = dataRange.start.toString();
     const dataFim = dataRange.end.toString();
 
-    const resultados: IVendaComEAN[] = [];
+    try {
+      const resultados: IVendaComEAN[] = [];
+      const codigos = Array.from(selecionados) as string[];
 
-    const codigos = Array.from(selecionados) as string[];
+      for (const codigo of codigos) {
+        const resposta = await VendaService.consultarVendas({
+          codigoFabricante: String(codigo),
+          dataInicio,
+          dataFim,
+        });
 
-    for (const codigo of codigos) {
-      const resposta = await VendaService.consultarVendas({
-        codigoFabricante: String(codigo),
-        dataInicio,
-        dataFim,
+        resultados.push(...resposta);
+      }
+
+      setVendas(resultados);
+      setPagina(1);
+
+      if (resultados.length === 0) {
+        addToast({
+          title: "Nenhum dado encontrado",
+          description: "Não foram encontradas vendas no período informado.",
+        });
+      } else {
+        addToast({
+          title: "Consulta realizada com sucesso",
+          description: `Foram encontradas ${resultados.length} vendas.`,
+        });
+      }
+    } catch (erro: any) {
+      const mensagem =
+        erro?.response?.data?.mensagem || "Erro ao consultar vendas.";
+      const detalhe =
+        erro?.response?.data?.detalhe ||
+        "Tente novamente mais tarde, se persistir, entre em contato com o suporte.";
+
+      addToast({
+        title: mensagem,
+        description: detalhe,
       });
-
-      resultados.push(...resposta);
+    } finally {
+      setLoading(false);
     }
-
-    setVendas(resultados);
-    setPagina(1);
-    setLoading(false);
   };
 
   return (
