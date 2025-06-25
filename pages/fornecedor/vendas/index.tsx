@@ -11,6 +11,7 @@ import {
   Skeleton,
   Tab,
   Tabs,
+  Tooltip,
 } from "@heroui/react";
 import { DateValue } from "@internationalized/date";
 import { Select, SelectItem } from "@heroui/react";
@@ -171,25 +172,29 @@ function FornecedorVendas() {
               variant="bordered"
               onChange={setDataRange}
             />
-            <Button
-              className="mt-2 w-full"
-              color="primary"
-              isLoading={loading}
-              startContent={<Search color="#fff" size={16} />}
-              type="submit"
-            >
-              Buscar
-            </Button>
-            <Button
-              className="mt-2 w-full"
-              color="default"
-              isDisabled={loading}
-              startContent={<Eraser color="#5e5c64" size={16} />}
-              variant="ghost"
-              onPress={handleLimparFiltros}
-            >
-              Limpar
-            </Button>
+            <Tooltip showArrow content="Buscar vendas" delay={200} radius="sm">
+              <Button
+                className="mt-2 w-full"
+                color="primary"
+                isLoading={loading}
+                startContent={<Search color="#fff" size={16} />}
+                type="submit"
+              >
+                Buscar
+              </Button>
+            </Tooltip>
+            <Tooltip showArrow content="Limpar seleção" delay={200} radius="sm">
+              <Button
+                className="mt-2 w-full"
+                color="default"
+                isDisabled={loading}
+                startContent={<Eraser color="#5e5c64" size={16} />}
+                variant="ghost"
+                onPress={handleLimparFiltros}
+              >
+                Limpar
+              </Button>
+            </Tooltip>
           </div>
         </form>
       </div>

@@ -7,6 +7,7 @@ import {
   CardBody,
   CardHeader,
   Input,
+  Tooltip,
 } from "@heroui/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -90,12 +91,19 @@ export default function LoginPage() {
                 required
                 endContent={
                   username && (
-                    <CircleX
-                      className="cursor-pointer"
-                      color="#5e5c64"
-                      size={16}
-                      onClick={() => setUsername("")}
-                    />
+                    <Tooltip
+                      showArrow
+                      content="Limpar usuário"
+                      delay={200}
+                      radius="sm"
+                    >
+                      <CircleX
+                        className="cursor-pointer"
+                        color="#5e5c64"
+                        size={16}
+                        onClick={() => setUsername("")}
+                      />
+                    </Tooltip>
                   )
                 }
                 label="Usuário"
@@ -109,27 +117,49 @@ export default function LoginPage() {
                 endContent={
                   <div className="flex items-center gap-1">
                     {senha && (
-                      <CircleX
-                        className="cursor-pointer"
-                        color="#5e5c64"
-                        size={16}
-                        onClick={() => setSenha("")}
-                      />
+                      <Tooltip
+                        showArrow
+                        content="Limpar senha"
+                        delay={200}
+                        radius="sm"
+                      >
+                        <CircleX
+                          className="cursor-pointer"
+                          color="#5e5c64"
+                          size={16}
+                          onClick={() => setSenha("")}
+                        />
+                      </Tooltip>
                     )}
+
                     {mostrarSenha ? (
-                      <EyeOff
-                        className="cursor-pointer"
-                        color="#5e5c64"
-                        size={16}
-                        onClick={() => setMostrarSenha(false)}
-                      />
+                      <Tooltip
+                        showArrow
+                        content="Ocultar senha"
+                        delay={200}
+                        radius="sm"
+                      >
+                        <EyeOff
+                          className="cursor-pointer"
+                          color="#5e5c64"
+                          size={16}
+                          onClick={() => setMostrarSenha(false)}
+                        />
+                      </Tooltip>
                     ) : (
-                      <Eye
-                        className="cursor-pointer"
-                        color="#5e5c64"
-                        size={16}
-                        onClick={() => setMostrarSenha(true)}
-                      />
+                      <Tooltip
+                        showArrow
+                        content="Mostrar senha"
+                        delay={200}
+                        radius="sm"
+                      >
+                        <Eye
+                          className="cursor-pointer"
+                          color="#5e5c64"
+                          size={16}
+                          onClick={() => setMostrarSenha(true)}
+                        />
+                      </Tooltip>
                     )}
                   </div>
                 }

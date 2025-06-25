@@ -10,6 +10,7 @@ import {
   SelectItem,
   Tab,
   Tabs,
+  Tooltip,
 } from "@heroui/react";
 import { Eraser, Search } from "lucide-react";
 
@@ -135,25 +136,30 @@ function FornecedorEstoque() {
             ))}
           </Select>
           <div className="flex mb-6 gap-4">
-            <Button
-              className="w-full"
-              color="primary"
-              isLoading={loading}
-              startContent={<Search size={16} />}
-              type="submit"
-            >
-              Buscar
-            </Button>
-            <Button
-              className="w-full"
-              color="default"
-              isDisabled={loading}
-              startContent={<Eraser color="#5e5c64" size={16} />}
-              variant="ghost"
-              onPress={handleLimparFiltros}
-            >
-              Limpar
-            </Button>
+            <Tooltip showArrow content="Buscar estoque" delay={200} radius="sm">
+              <Button
+                className="w-full"
+                color="primary"
+                isLoading={loading}
+                startContent={<Search size={16} />}
+                type="submit"
+              >
+                Buscar
+              </Button>
+            </Tooltip>
+
+            <Tooltip showArrow content="Limpar seleção" delay={200} radius="sm">
+              <Button
+                className="w-full"
+                color="default"
+                isDisabled={loading}
+                startContent={<Eraser color="#5e5c64" size={16} />}
+                variant="ghost"
+                onPress={handleLimparFiltros}
+              >
+                Limpar
+              </Button>
+            </Tooltip>
           </div>
         </form>
       </div>
