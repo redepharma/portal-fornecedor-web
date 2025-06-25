@@ -24,6 +24,7 @@
     "@internationalized/date": "^3.8.2",
     "@react-aria/i18n": "^3.12.10",
     "@react-aria/visually-hidden": "3.8.24",
+    "@react-stately/data": "^3.13.1",
     "axios": "^1.10.0",
     "clsx": "2.1.1",
     "framer-motion": "11.13.1",
