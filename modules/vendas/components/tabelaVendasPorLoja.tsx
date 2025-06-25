@@ -16,6 +16,7 @@ import { useAsyncList } from "@react-stately/data";
 import { useEffect, useMemo } from "react";
 
 import { IVendaComEAN } from "@/modules/vendas/types/vendaComEan.interface";
+import { ArrowDownToLine } from "lucide-react";
 
 interface Props {
   vendas: IVendaComEAN[];
@@ -79,19 +80,24 @@ export function TabelaVendasPorLoja({
   }, [vendas]);
 
   return (
-    <div className="mt-4">
-      <div className="flex justify-between items-center mb-2">
-        <p className="text-sm text-gray-600 font-medium mb-2">
-          O total de vendas líquidas no período:{" "}
-          <strong>R${totalLiquido.toFixed(2)}</strong>
-        </p>
-        <Button color="primary" size="sm">
+    <div>
+      <div className="flex justify-between items-center">
+        <h2 className="text-lg text-zinc-800 font-semibold">Vendas por loja</h2>
+
+        <Button
+          color="primary"
+          size="sm"
+          startContent={<ArrowDownToLine size={14} />}
+        >
           Baixar Excel
         </Button>
       </div>
+      <p className="text-sm text-slate-600 font-medium mb-2">
+        Total de vendas líquidas no período:{" "}
+        <strong>R${totalLiquido.toFixed(2)}</strong>
+      </p>
 
       <Table
-        isHeaderSticky
         isStriped
         aria-label="Tabela de vendas por loja com ordenação"
         className="max-h-[450px]"
@@ -140,7 +146,12 @@ export function TabelaVendasPorLoja({
 
       {totalPaginas > 1 && (
         <div className="flex justify-center mt-4">
-          <Pagination page={pagina} total={totalPaginas} onChange={setPagina} />
+          <Pagination
+            showControls
+            page={pagina}
+            total={totalPaginas}
+            onChange={setPagina}
+          />
         </div>
       )}
     </div>

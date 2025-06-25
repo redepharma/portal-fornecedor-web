@@ -1,7 +1,9 @@
 "use client";
+import type { Selection } from "@heroui/react";
 
 import { useEffect, useState } from "react";
-import { Button, Checkbox, Tab, Tabs } from "@heroui/react";
+import { Button, Divider, Select, SelectItem, Tab, Tabs } from "@heroui/react";
+import { Search } from "lucide-react";
 
 import { withRoleProtection } from "@/hoc/withRoleProtection";
 import DefaultLayout from "@/layouts/default";
@@ -16,7 +18,7 @@ import { EstoqueService } from "@/modules/estoque/estoque.service";
 function FornecedorEstoque() {
   const { user } = useAuth();
   const [fabricantes, setFabricantes] = useState<IFabricante[]>([]);
-  const [selecionados, setSelecionados] = useState<number[]>([]);
+  const [selecionados, setSelecionados] = useState<Selection>(new Set([]));
 
   const [estoque, setEstoque] = useState<IEstoque[]>([]);
   const [loading, setLoading] = useState(false);
@@ -34,14 +36,6 @@ function FornecedorEstoque() {
     FornecedorService.listarFabricantes(codigos).then(setFabricantes);
   }, [user?.codigoInterno]);
 
-  const toggleFabricante = (codigo: number) => {
-    setSelecionados((prev) =>
-      prev.includes(codigo)
-        ? prev.filter((c) => c !== codigo)
-        : [...prev, codigo]
-    );
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -50,7 +44,7 @@ function FornecedorEstoque() {
 
     try {
       const resposta = await EstoqueService.consultarEstoque(
-        selecionados.map(String)
+        Array.from(selecionados).map(String)
       );
 
       setEstoque(resposta);
@@ -61,37 +55,39 @@ function FornecedorEstoque() {
 
   return (
     <DefaultLayout>
-      <h1 className="text-4xl text-zinc-700 font-bold">ESTOQUE</h1>
+      <h1 className="text-4xl text-zinc-800 font-bold">ESTOQUE</h1>
       <p className="text-sm text-slate-500">
         Exibição de estoque com dados agrupados por produto e por loja
       </p>
-      <div className="flex flex-col w-full p-4 mt-8 gap-4 items-center justify-center bg-zinc-100 rounded-xl">
-        <h2 className="text-lg font-bold text-slate-700">
-          Selecione um fabricante
-        </h2>
-        <form
-          className="flex flex-col gap-2 items-center"
-          onSubmit={handleSubmit}
-        >
-          <div className="flex flex-wrap gap-4 justify-center text-sm">
+      <Divider className="my-6" />
+      <div className="flex flex-col w-full gap-4 items-start justify-center rounded-xl">
+        <form className="flex gap-4 items-center" onSubmit={handleSubmit}>
+          <Select
+            className="w-[300px]"
+            description="Selecione um ou mais fabricantes"
+            label="Fabricantes"
+            selectedKeys={selecionados}
+            selectionMode="multiple"
+            variant="bordered"
+            onSelectionChange={setSelecionados}
+          >
             {fabricantes.map((fab) => (
-              <Checkbox
-                key={fab.CD_FABRIC}
-                checked={selecionados.includes(fab.CD_FABRIC)}
-                onChange={() => toggleFabricante(fab.CD_FABRIC)}
-              >
-                {fab.NM_FABRIC}
-              </Checkbox>
+              <SelectItem key={fab.CD_FABRIC}>{fab.NM_FABRIC}</SelectItem>
             ))}
-          </div>
-          <div className="flex gap-4 mt-4">
-            <Button color="primary" isLoading={loading} type="submit">
-              Selecionar
+          </Select>
+          <div className="mb-6">
+            <Button
+              color="primary"
+              isLoading={loading}
+              startContent={<Search size={16} />}
+              type="submit"
+            >
+              Buscar
             </Button>
           </div>
         </form>
       </div>
-      <Tabs aria-label="Visualização de estoque" className="mt-8">
+      <Tabs aria-label="Visualização de estoque" className="mt-4">
         <Tab key="produto" title="Por produto">
           <TabelaEstoquePorProduto
             estoque={estoque}

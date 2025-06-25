@@ -1,8 +1,19 @@
 "use client";
 
+import type { Selection } from "@heroui/react";
+
 import { useEffect, useState } from "react";
-import { Button, Checkbox, DateRangePicker, Tab, Tabs } from "@heroui/react";
+import {
+  Button,
+  DateRangePicker,
+  Divider,
+  Skeleton,
+  Tab,
+  Tabs,
+} from "@heroui/react";
 import { DateValue } from "@internationalized/date";
+import { Select, SelectItem } from "@heroui/react";
+import { Search } from "lucide-react";
 
 import { VendaService } from "@/modules/vendas/vendas.service";
 import { withRoleProtection } from "@/hoc/withRoleProtection";
@@ -17,7 +28,7 @@ import { TabelaVendasPorLoja } from "@/modules/vendas/components/tabelaVendasPor
 function FornecedorVendas() {
   const { user } = useAuth();
   const [fabricantes, setFabricantes] = useState<IFabricante[]>([]);
-  const [selecionados, setSelecionados] = useState<number[]>([]);
+  const [selecionados, setSelecionados] = useState<Selection>(new Set([]));
   const [dataRange, setDataRange] = useState<{
     start: DateValue;
     end: DateValue;
@@ -28,7 +39,6 @@ function FornecedorVendas() {
 
   const [pagina, setPagina] = useState(1);
   const porPagina = 10;
-  const totalPaginas = Math.ceil(vendas.length / porPagina);
 
   useEffect(() => {
     if (!user?.codigoInterno) return;
@@ -36,18 +46,10 @@ function FornecedorVendas() {
     const codigos: number[] = user.codigoInterno
       .split(",")
       .map((codigo) => parseInt(codigo, 10))
-      .filter((c) => !isNaN(c)); // garante que só números válidos entrem
+      .filter((c) => !isNaN(c));
 
     FornecedorService.listarFabricantes(codigos).then(setFabricantes);
   }, [user?.codigoInterno]);
-
-  const toggleFabricante = (codigo: number) => {
-    setSelecionados((prev) =>
-      prev.includes(codigo)
-        ? prev.filter((c) => c !== codigo)
-        : [...prev, codigo]
-    );
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,7 +63,9 @@ function FornecedorVendas() {
 
     const resultados: IVendaComEAN[] = [];
 
-    for (const codigo of selecionados) {
+    const codigos = Array.from(selecionados) as string[];
+
+    for (const codigo of codigos) {
       const resposta = await VendaService.consultarVendas({
         codigoFabricante: String(codigo),
         dataInicio,
@@ -76,45 +80,63 @@ function FornecedorVendas() {
     setLoading(false);
   };
 
-  const vendasPaginadas = vendas.slice(
-    (pagina - 1) * porPagina,
-    pagina * porPagina
-  );
-
   return (
     <DefaultLayout>
-      <h1 className="text-4xl text-zinc-700 font-bold">VENDAS</h1>
+      <h1 className="text-4xl text-zinc-800 font-bold">VENDAS</h1>
       <p className="text-sm text-slate-500">
         Exibição de vendas por período, agrupadas por produto e por loja
       </p>
-      <div className="flex flex-col w-full p-4 mt-8 gap-4 items-center justify-center bg-zinc-100 rounded-xl">
-        <h2 className="text-lg font-bold text-slate-700">
-          Selecione um fabricante e um período
-        </h2>
+      <Divider className="my-6" />
+      <div className="flex w-full gap-4 items-center justify-start rounded-xl">
         <form
-          className="flex flex-col gap-2 items-center"
+          className="flex gap-4 items-center justify-center"
           onSubmit={handleSubmit}
         >
-          <div className="flex flex-wrap gap-4 justify-center text-sm">
-            {fabricantes.map((fab) => (
-              <Checkbox
-                key={fab.CD_FABRIC}
-                checked={selecionados.includes(fab.CD_FABRIC)}
-                onChange={() => toggleFabricante(fab.CD_FABRIC)}
-              >
-                {fab.NM_FABRIC}
-              </Checkbox>
-            ))}
-          </div>
-          <div className="flex gap-4 mt-4">
-            <DateRangePicker value={dataRange} onChange={setDataRange} />
-            <Button color="primary" isLoading={loading} type="submit">
-              Selecionar
+          {fabricantes.length === 0 ? (
+            <div className="w-[300px]">
+              <Skeleton className="h-[56px] w-full rounded-medium" />
+              <Skeleton className="h-[16px] w-2/3 mt-2 rounded-small" />
+            </div>
+          ) : (
+            <Select
+              className="w-[300px]"
+              description="Selecione um ou mais fabricantes"
+              label="Fabricantes"
+              selectedKeys={selecionados}
+              selectionMode="multiple"
+              variant="bordered"
+              onSelectionChange={setSelecionados}
+            >
+              {fabricantes.map((fab) => (
+                <SelectItem key={String(fab.CD_FABRIC)}>
+                  {fab.NM_FABRIC}
+                </SelectItem>
+              ))}
+            </Select>
+          )}
+
+          <div className="flex gap-4">
+            <DateRangePicker
+              description="Selecione o período de vendas"
+              label="Período"
+              labelPlacement="inside"
+              value={dataRange}
+              variant="bordered"
+              onChange={setDataRange}
+            />
+            <Button
+              className="mt-2 w-full"
+              color="primary"
+              isLoading={loading}
+              startContent={<Search color="#fff" size={16} />}
+              type="submit"
+            >
+              Buscar
             </Button>
           </div>
         </form>
       </div>
-      <Tabs aria-label="Visualização de vendas" className="mt-8">
+      <Tabs aria-label="Visualização de vendas" className="mt-4">
         <Tab key="produto" title="Por produto">
           <TabelaVendasPorProduto
             loading={loading}

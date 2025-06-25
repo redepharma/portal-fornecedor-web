@@ -13,9 +13,10 @@ import {
   getKeyValue,
 } from "@heroui/react";
 import { useAsyncList } from "@react-stately/data";
+import { useEffect } from "react";
+import { ArrowDownToLine } from "lucide-react";
 
 import { IEstoque } from "../types/estoque.interface";
-import { useEffect } from "react";
 
 interface Props {
   estoque: IEstoque[];
@@ -72,16 +73,21 @@ export function TabelaEstoquePorLoja({
   }, [estoque]);
 
   return (
-    <div className="mt-4">
+    <div>
       <div className="flex justify-between items-center mb-2">
-        <h2 className="text-lg font-semibold">Estoque por filial</h2>
-        <Button color="primary" size="sm">
+        <h2 className="text-lg text-zinc-800 font-semibold">
+          Estoque por filial
+        </h2>
+        <Button
+          color="primary"
+          size="sm"
+          startContent={<ArrowDownToLine size={14} />}
+        >
           Baixar Excel
         </Button>
       </div>
 
       <Table
-        isHeaderSticky
         isStriped
         aria-label="Tabela de estoque por loja com ordenação"
         className="max-h-[450px]"
@@ -124,7 +130,12 @@ export function TabelaEstoquePorLoja({
 
       {totalPaginas > 1 && (
         <div className="flex justify-center mt-4">
-          <Pagination page={pagina} total={totalPaginas} onChange={setPagina} />
+          <Pagination
+            showControls
+            page={pagina}
+            total={totalPaginas}
+            onChange={setPagina}
+          />
         </div>
       )}
     </div>

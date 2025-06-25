@@ -1,8 +1,9 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Next.js + HeroUI",
-  description: "Make beautiful websites regardless of your design experience.",
+  name: "Portal do fornecedor - Redepharma",
+  description:
+    "Portal do fornecedor da Redepharma para consulta de estoque e vendas.",
   navItems: [
     {
       label: "Home",

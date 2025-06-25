@@ -1,13 +1,17 @@
 "use client";
 
-import Link from "next/link";
-import { Home, Users, Settings, LogOut } from "lucide-react";
+import { Home, LogOut, Package, BadgeDollarSign } from "lucide-react";
+import { usePathname } from "next/navigation";
+
+import { NavItem } from "./navItem";
 
 import { useAuth } from "@/hooks/use-auth";
 import { logout } from "@/services/auth.service";
+import { Divider } from "@heroui/react";
 
 export function Sidebar() {
   const { setUser } = useAuth();
+  const pathname = usePathname();
 
   const handleLogout = () => {
     logout();
@@ -16,17 +20,29 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="w-64 bg-white border-r h-full shadow-sm p-4 flex flex-col justify-between">
+    <aside className="w-64 bg-zinc-100 border-r h-full shadow-sm p-4 flex flex-col justify-between">
       <div>
-        <h2 className="text-lg font-semibold text-slate-800 mb-4">Menu</h2>
+        <img alt="Logo" className="w-32 mx-auto mb-1" src="/logo.png" />
+        <h2 className="text-lg font-bold text-slate-800 text-center">
+          Portal do Fornecedor
+        </h2>
+        <Divider className="my-4" />
 
-        <NavItem href="/" icon={<Home size={18} />}>
+        <NavItem currentPath={pathname} href="/" icon={<Home size={18} />}>
           Início
         </NavItem>
-        <NavItem href="/fornecedor/vendas" icon={<Users size={18} />}>
+        <NavItem
+          currentPath={pathname}
+          href="/fornecedor/vendas"
+          icon={<BadgeDollarSign size={18} />}
+        >
           Vendas
         </NavItem>
-        <NavItem href="/fornecedor/estoque" icon={<Settings size={18} />}>
+        <NavItem
+          currentPath={pathname}
+          href="/fornecedor/estoque"
+          icon={<Package size={18} />}
+        >
           Estoque
         </NavItem>
       </div>
@@ -39,25 +55,5 @@ export function Sidebar() {
         Sair
       </button>
     </aside>
-  );
-}
-
-function NavItem({
-  href,
-  icon,
-  children,
-}: {
-  href: string;
-  icon: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-700 hover:bg-slate-100 transition"
-      href={href}
-    >
-      {icon}
-      {children}
-    </Link>
   );
 }

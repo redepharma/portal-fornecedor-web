@@ -4,6 +4,7 @@ import { HeroUIProvider } from "@heroui/system";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { useRouter } from "next/router";
 import { I18nProvider } from "@react-aria/i18n";
+import { ToastProvider } from "@heroui/react";
 
 import { fontSans, fontMono } from "@/config/fonts";
 import "@/styles/globals.css";
@@ -17,6 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <NextThemesProvider defaultTheme="light">
         <AuthProvider>
           <I18nProvider locale="pt-BR">
+            <ToastProvider />
             <Component {...pageProps} />
           </I18nProvider>
         </AuthProvider>

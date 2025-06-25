@@ -9,7 +9,6 @@ import {
   Input,
   Spinner,
 } from "@heroui/react";
-import { LogIn } from "lucide-react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -94,10 +93,6 @@ export default function LoginPage() {
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
           />
-
-          {erro && (
-            <div className="text-sm text-red-500 text-center mt-1">{erro}</div>
-          )}
 
           <Button
             className="w-full"

@@ -16,6 +16,7 @@ import { useAsyncList } from "@react-stately/data";
 
 import { IVendaComEAN } from "@/modules/vendas/types/vendaComEan.interface";
 import { useEffect } from "react";
+import { ArrowDownToLine } from "lucide-react";
 
 interface TabelaVendasProps {
   vendas: IVendaComEAN[];
@@ -73,14 +74,20 @@ export function TabelaVendasPorProduto({
 
   return (
     <>
-      <div className="flex flex-row-reverse justify-between items-center mb-2">
-        <Button color="primary" size="sm">
+      <div className="flex flex-row justify-between items-center mb-2">
+        <h2 className="text-lg text-zinc-800 font-semibold">
+          Vendas por produto
+        </h2>
+        <Button
+          color="primary"
+          size="sm"
+          startContent={<ArrowDownToLine size={14} />}
+        >
           Baixar Excel
         </Button>
       </div>
 
       <Table
-        isHeaderSticky
         isStriped
         aria-label="Tabela de vendas por produto com ordenação"
         className="max-h-[450px]"
@@ -126,7 +133,12 @@ export function TabelaVendasPorProduto({
 
       {totalPaginas > 1 && (
         <div className="flex justify-center mt-4">
-          <Pagination page={pagina} total={totalPaginas} onChange={setPagina} />
+          <Pagination
+            showControls
+            page={pagina}
+            total={totalPaginas}
+            onChange={setPagina}
+          />
         </div>
       )}
     </>
