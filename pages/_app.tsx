@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import { HeroUIProvider } from "@heroui/system";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { useRouter } from "next/router";
+import { I18nProvider } from "@react-aria/i18n";
 
 import { fontSans, fontMono } from "@/config/fonts";
 import "@/styles/globals.css";
@@ -15,7 +16,9 @@ export default function App({ Component, pageProps }: AppProps) {
     <HeroUIProvider navigate={router.push}>
       <NextThemesProvider defaultTheme="light">
         <AuthProvider>
-          <Component {...pageProps} />
+          <I18nProvider locale="pt-BR">
+            <Component {...pageProps} />
+          </I18nProvider>
         </AuthProvider>
       </NextThemesProvider>
     </HeroUIProvider>

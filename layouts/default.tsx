@@ -1,6 +1,5 @@
-import { Link } from "@heroui/link";
-
 import { Head } from "./head";
+
 import { Sidebar } from "@/components/sidebar";
 
 export default function DefaultLayout({
@@ -17,7 +16,7 @@ export default function DefaultLayout({
       <div className="flex flex-col flex-1 overflow-hidden">
         <Head />
 
-        <main className="flex-1 overflow-auto px-6 pt-6">{children}</main>
+        <main className="flex-1 overflow-auto px-12 pt-12">{children}</main>
       </div>
     </div>
   );

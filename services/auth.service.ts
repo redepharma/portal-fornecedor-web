@@ -1,7 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 
-import { AuthUser } from "@/types/auth.types";
+import { AuthUser, Role } from "@/types/auth.types";
 import { apiClient } from "@/modules/api/api.client";
 
 const TOKEN_KEY = "access_token";
@@ -52,9 +52,14 @@ export function logout() {
 }
 
 export async function getProfile(): Promise<AuthUser> {
-  const response = await apiClient.get<AuthUser>("/users/me");
+  const response = await apiClient.get<
+    Omit<AuthUser, "roles"> & { roles: string }
+  >("/users/me");
 
-  return response.data;
+  return {
+    ...response.data,
+    roles: response.data.roles.split(",").map((r) => r.trim()) as Role[],
+  };
 }
 
 export function onLogout(callback: () => void) {
