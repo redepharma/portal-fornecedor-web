@@ -2,15 +2,15 @@
 
 import { Home, LogOut, Package, BadgeDollarSign } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { Divider } from "@heroui/react";
 
 import { NavItem } from "./navItem";
 
 import { useAuth } from "@/hooks/use-auth";
 import { logout } from "@/services/auth.service";
-import { Divider } from "@heroui/react";
 
 export function Sidebar() {
-  const { setUser } = useAuth();
+  const { user, setUser } = useAuth();
   const pathname = usePathname();
 
   const handleLogout = () => {
@@ -27,7 +27,8 @@ export function Sidebar() {
           Portal do Fornecedor
         </h2>
         <Divider className="my-4" />
-
+        <p className="font-bold text-slate-700 text-center">{user?.nome}</p>
+        <Divider className="my-4" />
         <NavItem currentPath={pathname} href="/" icon={<Home size={18} />}>
           Início
         </NavItem>
