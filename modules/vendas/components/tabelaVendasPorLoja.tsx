@@ -13,7 +13,7 @@ import {
   getKeyValue,
 } from "@heroui/react";
 import { useAsyncList } from "@react-stately/data";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import { IVendaComEAN } from "@/modules/vendas/types/vendaComEan.interface";
 
@@ -73,6 +73,10 @@ export function TabelaVendasPorLoja({
     (pagina - 1) * porPagina,
     pagina * porPagina
   );
+
+  useEffect(() => {
+    list.reload();
+  }, [vendas]);
 
   return (
     <div className="mt-4">

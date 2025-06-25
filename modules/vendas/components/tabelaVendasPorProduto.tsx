@@ -15,6 +15,7 @@ import {
 import { useAsyncList } from "@react-stately/data";
 
 import { IVendaComEAN } from "@/modules/vendas/types/vendaComEan.interface";
+import { useEffect } from "react";
 
 interface TabelaVendasProps {
   vendas: IVendaComEAN[];
@@ -65,6 +66,10 @@ export function TabelaVendasPorProduto({
     (pagina - 1) * porPagina,
     pagina * porPagina
   );
+
+  useEffect(() => {
+    list.reload();
+  }, [vendas]);
 
   return (
     <>
