@@ -119,12 +119,6 @@ export function TabelaVendasPorLoja({
           <TableColumn key="CD_FILIAL" allowsSorting>
             Filial
           </TableColumn>
-          <TableColumn key="CD_PROD" allowsSorting>
-            Código
-          </TableColumn>
-          <TableColumn key="EAN" allowsSorting>
-            EAN
-          </TableColumn>
           <TableColumn key="DS_PROD" allowsSorting>
             Descrição
           </TableColumn>
@@ -136,6 +130,12 @@ export function TabelaVendasPorLoja({
           </TableColumn>
           <TableColumn key="VLR_VD" allowsSorting>
             Valor Total
+          </TableColumn>
+          <TableColumn key="EAN" allowsSorting>
+            EAN
+          </TableColumn>
+          <TableColumn key="CD_PROD" allowsSorting>
+            Código
           </TableColumn>
         </TableHeader>
 

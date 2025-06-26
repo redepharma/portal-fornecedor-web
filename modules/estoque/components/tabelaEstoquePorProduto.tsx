@@ -102,17 +102,17 @@ export function TabelaEstoquePorProduto({
         onSortChange={list.sort}
       >
         <TableHeader>
-          <TableColumn key="cdProd" allowsSorting>
-            Código
-          </TableColumn>
-          <TableColumn key="ean01" allowsSorting>
-            EAN
-          </TableColumn>
           <TableColumn key="dsProd" allowsSorting>
             Descrição
           </TableColumn>
           <TableColumn key="qtEst" allowsSorting>
             Estoque
+          </TableColumn>
+          <TableColumn key="ean01" allowsSorting>
+            EAN
+          </TableColumn>
+          <TableColumn key="cdProd" allowsSorting>
+            Código
           </TableColumn>
         </TableHeader>
 

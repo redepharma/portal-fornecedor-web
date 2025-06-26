@@ -104,12 +104,6 @@ export function TabelaVendasPorProduto({
         onSortChange={list.sort}
       >
         <TableHeader>
-          <TableColumn key="CD_PROD" allowsSorting>
-            Código
-          </TableColumn>
-          <TableColumn key="EAN" allowsSorting>
-            EAN
-          </TableColumn>
           <TableColumn key="DS_PROD" allowsSorting>
             Descrição
           </TableColumn>
@@ -121,6 +115,12 @@ export function TabelaVendasPorProduto({
           </TableColumn>
           <TableColumn key="VLR_VD" allowsSorting>
             Valor Total
+          </TableColumn>
+          <TableColumn key="EAN" allowsSorting>
+            EAN
+          </TableColumn>
+          <TableColumn key="CD_PROD" allowsSorting>
+            Código
           </TableColumn>
         </TableHeader>
 
