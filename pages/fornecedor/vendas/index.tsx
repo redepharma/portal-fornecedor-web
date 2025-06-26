@@ -74,11 +74,11 @@ function FornecedorVendas() {
 
     try {
       const resultados: IVendaComEAN[] = [];
-      const codigos = Array.from(selecionados) as string[];
+      const codigos = Array.from(selecionados).map(String);
 
       for (const codigo of codigos) {
         const resposta = await VendaService.consultarVendas({
-          codigoFabricante: String(codigo),
+          codigoFabricante: codigo,
           dataInicio,
           dataFim,
         });
