@@ -1,3 +1,5 @@
+import { addToast } from "@heroui/react";
+
 import { IEstoque } from "./types/estoque.interface";
 import { IEstoqueAgrupado } from "./types/estoqueAgrupado.interface";
 
@@ -42,5 +44,49 @@ export const EstoqueService = {
     );
 
     return estoqueNormalizado;
+  },
+
+  async exportarExcelEstoquePorFilial(codigosInternos: string[]) {
+    const query = codigosInternos.join(",");
+
+    try {
+      const response = await apiClient.get(
+        `/estoque/exportar-excel-por-filial`,
+        {
+          params: { codigoInterno: query },
+          responseType: "blob",
+        }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.setAttribute("download", "estoque_por_filial.xlsx");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        const mensagem =
+          error.response.data?.mensagem ||
+          "Nenhum estoque encontrado para exportação.";
+
+        addToast({
+          title: "Não foi possível exportar",
+          description: mensagem,
+          color: "warning",
+        });
+      } else {
+        const mensagem =
+          error?.response?.data?.mensagem || "Erro ao exportar estoque.";
+
+        addToast({
+          title: "Erro ao exportar",
+          description: mensagem,
+          color: "danger",
+        });
+      }
+    }
   },
 };

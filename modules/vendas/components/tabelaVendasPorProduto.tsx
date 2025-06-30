@@ -11,9 +11,12 @@ import {
   Spinner,
   Button,
   Input,
+  addToast,
 } from "@heroui/react";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowDownToLine, Search } from "lucide-react";
+
+import { VendaService } from "../vendas.service";
 
 import { IVendaComEAN } from "@/modules/vendas/types/vendaComEan.interface";
 
@@ -23,6 +26,9 @@ interface TabelaVendasProps {
   porPagina: number;
   setPagina: (page: number) => void;
   loading: boolean;
+  codigosFabricantes?: string[];
+  dataInicio?: string;
+  dataFim?: string;
 }
 
 export function TabelaVendasPorProduto({
@@ -31,7 +37,12 @@ export function TabelaVendasPorProduto({
   porPagina,
   setPagina,
   loading,
+  codigosFabricantes = [],
+  dataInicio,
+  dataFim,
 }: TabelaVendasProps) {
+  const [baixandoExcel, setBaixandoExcel] = useState(false);
+
   const [filtro, setFiltro] = useState("");
   const [ordenacao, setOrdenacao] = useState<{
     coluna: keyof IVendaComEAN | null;
@@ -73,7 +84,7 @@ export function TabelaVendasPorProduto({
   );
 
   useEffect(() => {
-    setPagina(1); // resetar para página 1 ao filtrar
+    setPagina(1);
   }, [filtro]);
 
   const handleOrdenar = (coluna: keyof IVendaComEAN) => {
@@ -105,6 +116,7 @@ export function TabelaVendasPorProduto({
         </div>
         <div className="flex gap-4 items-center">
           <Input
+            isDisabled={vendas.length === 0}
             placeholder="Pesquisar por nome ou EAN"
             size="sm"
             startContent={<Search color="#77767b" size={14} />}
@@ -114,8 +126,38 @@ export function TabelaVendasPorProduto({
           <Button
             className="max-w-fit w-full"
             color="primary"
+            isDisabled={
+              !codigosFabricantes.length ||
+              !dataInicio ||
+              !dataFim ||
+              vendas.length === 0
+            }
+            isLoading={baixandoExcel}
             size="sm"
             startContent={<ArrowDownToLine size={14} />}
+            onPress={async () => {
+              setBaixandoExcel(true);
+              try {
+                await VendaService.exportarVendasExcel({
+                  codigoFabricante: codigosFabricantes.join(","),
+                  dataInicio: dataInicio ?? "",
+                  dataFim: dataFim ?? "",
+                });
+              } catch (error) {
+                const mensagem =
+                  error instanceof Error
+                    ? error.message
+                    : "Erro ao baixar o Excel";
+
+                addToast({
+                  title: "Erro ao baixar Excel",
+                  description: mensagem,
+                  color: "danger",
+                });
+              } finally {
+                setBaixandoExcel(false);
+              }
+            }}
           >
             Baixar Excel
           </Button>

@@ -16,6 +16,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowDownToLine, Search } from "lucide-react";
 
 import { IEstoqueAgrupado } from "../types/estoqueAgrupado.interface";
+import { EstoqueService } from "../estoque.service";
 
 interface Props {
   estoque: IEstoqueAgrupado[];
@@ -23,6 +24,7 @@ interface Props {
   porPagina: number;
   setPagina: (p: number) => void;
   loading: boolean;
+  codigosFabricantes?: string[];
 }
 
 export function TabelaEstoquePorProduto({
@@ -31,6 +33,7 @@ export function TabelaEstoquePorProduto({
   porPagina,
   setPagina,
   loading,
+  codigosFabricantes = [],
 }: Props) {
   const [filtro, setFiltro] = useState("");
   const [ordenacao, setOrdenacao] = useState<{
@@ -106,8 +109,12 @@ export function TabelaEstoquePorProduto({
           <Button
             className="max-w-fit w-full"
             color="primary"
+            isDisabled={estoque.length === 0}
             size="sm"
             startContent={<ArrowDownToLine size={14} />}
+            onPress={() =>
+              EstoqueService.exportarExcelEstoquePorFilial(codigosFabricantes)
+            }
           >
             Baixar Excel
           </Button>

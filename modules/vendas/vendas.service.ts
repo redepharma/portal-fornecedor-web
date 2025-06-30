@@ -26,4 +26,46 @@ export const VendaService = {
       VLR_VD: Number(item.VLR_VD.toFixed(2)),
     }));
   },
+
+  async exportarVendasExcel(dto: ConsultaVendaDTO): Promise<void> {
+    const url = `/venda/exportar-excel?codigoFabricante=${dto.codigoFabricante}&dataInicio=${dto.dataInicio}&dataFim=${dto.dataFim}`;
+
+    const response = await apiClient.get(url, {
+      responseType: "blob",
+    });
+
+    const blob = new Blob([response.data], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    const urlBlob = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = urlBlob;
+    link.download = "vendas_agrupadas.xlsx";
+    link.click();
+
+    window.URL.revokeObjectURL(urlBlob);
+  },
+
+  async exportarVendasPorFilialExcel(dto: ConsultaVendaDTO): Promise<void> {
+    const url = `/venda/exportar-excel-por-filial?codigoFabricante=${dto.codigoFabricante}&dataInicio=${dto.dataInicio}&dataFim=${dto.dataFim}`;
+
+    const response = await apiClient.get(url, {
+      responseType: "blob",
+    });
+
+    const blob = new Blob([response.data], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    const urlBlob = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = urlBlob;
+    link.download = "vendas_por_filial.xlsx";
+    link.click();
+
+    window.URL.revokeObjectURL(urlBlob);
+  },
 };

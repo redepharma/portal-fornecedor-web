@@ -211,6 +211,9 @@ function FornecedorVendas() {
       <Tabs aria-label="Visualização de vendas" className="mt-4">
         <Tab key="produto" title="Por produto">
           <TabelaVendasPorProduto
+            codigosFabricantes={Array.from(selecionados).map(String)}
+            dataFim={dataRange?.end?.toString()}
+            dataInicio={dataRange?.start?.toString()}
             loading={loading}
             pagina={pagina}
             porPagina={porPagina}
@@ -221,6 +224,9 @@ function FornecedorVendas() {
 
         <Tab key="loja" title="Por loja">
           <TabelaVendasPorLoja
+            codigosFabricantes={Array.from(selecionados).map(String)}
+            dataFim={dataRange?.end?.toString()}
+            dataInicio={dataRange?.start?.toString()}
             loading={loading}
             pagina={pagina}
             porPagina={porPagina}

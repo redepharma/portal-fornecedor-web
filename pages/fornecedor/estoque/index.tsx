@@ -176,6 +176,7 @@ function FornecedorEstoque() {
       <Tabs aria-label="Visualização de estoque" className="mt-4">
         <Tab key="produto" title="Por produto">
           <TabelaEstoquePorProduto
+            codigosFabricantes={Array.from(selecionados).map(String)}
             estoque={estoqueAgrupado}
             loading={loading}
             pagina={pagina}
@@ -186,6 +187,7 @@ function FornecedorEstoque() {
 
         <Tab key="loja" title="Por loja">
           <TabelaEstoquePorLoja
+            codigosFabricantes={Array.from(selecionados).map(String)}
             estoque={estoquePorFilial}
             loading={loading}
             pagina={pagina}

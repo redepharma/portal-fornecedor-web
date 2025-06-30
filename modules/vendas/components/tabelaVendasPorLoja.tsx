@@ -12,11 +12,13 @@ import {
   Button,
   Divider,
   Input,
+  addToast,
 } from "@heroui/react";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowDownToLine, Search } from "lucide-react";
 
 import { IVendaComEAN } from "@/modules/vendas/types/vendaComEan.interface";
+import { VendaService } from "../vendas.service";
 
 interface Props {
   vendas: IVendaComEAN[];
@@ -24,6 +26,9 @@ interface Props {
   porPagina: number;
   setPagina: (p: number) => void;
   loading: boolean;
+  codigosFabricantes?: string[];
+  dataInicio?: string;
+  dataFim?: string;
 }
 
 export function TabelaVendasPorLoja({
@@ -32,7 +37,11 @@ export function TabelaVendasPorLoja({
   porPagina,
   setPagina,
   loading,
+  codigosFabricantes = [],
+  dataInicio,
+  dataFim,
 }: Props) {
+  const [baixandoExcel, setBaixandoExcel] = useState(false);
   const [filtro, setFiltro] = useState("");
   const [ordenacao, setOrdenacao] = useState<{
     coluna: keyof IVendaComEAN | null;
@@ -111,8 +120,38 @@ export function TabelaVendasPorLoja({
           <Button
             className="max-w-fit w-full"
             color="primary"
+            isDisabled={
+              !codigosFabricantes.length ||
+              !dataInicio ||
+              !dataFim ||
+              vendas.length === 0
+            }
+            isLoading={baixandoExcel}
             size="sm"
             startContent={<ArrowDownToLine size={14} />}
+            onPress={async () => {
+              setBaixandoExcel(true);
+              try {
+                await VendaService.exportarVendasPorFilialExcel({
+                  codigoFabricante: codigosFabricantes.join(","),
+                  dataInicio: dataInicio ?? "",
+                  dataFim: dataFim ?? "",
+                });
+              } catch (error) {
+                const mensagem =
+                  error instanceof Error
+                    ? error.message
+                    : "Erro ao baixar o Excel";
+
+                addToast({
+                  title: "Erro ao baixar Excel",
+                  description: mensagem,
+                  color: "danger",
+                });
+              } finally {
+                setBaixandoExcel(false);
+              }
+            }}
           >
             Baixar Excel
           </Button>
