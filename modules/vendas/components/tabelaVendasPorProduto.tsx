@@ -10,13 +10,12 @@ import {
   Pagination,
   Spinner,
   Button,
-  getKeyValue,
+  Input,
 } from "@heroui/react";
-import { useAsyncList } from "@react-stately/data";
+import { useEffect, useMemo, useState } from "react";
+import { ArrowDownToLine, Search } from "lucide-react";
 
 import { IVendaComEAN } from "@/modules/vendas/types/vendaComEan.interface";
-import { useEffect } from "react";
-import { ArrowDownToLine } from "lucide-react";
 
 interface TabelaVendasProps {
   vendas: IVendaComEAN[];
@@ -33,44 +32,62 @@ export function TabelaVendasPorProduto({
   setPagina,
   loading,
 }: TabelaVendasProps) {
-  const list = useAsyncList({
-    async load() {
-      return {
-        items: vendas.map((item, index) => ({
-          ...item,
-          __key: `${item.CD_PROD}-${item.EAN ?? "sem-ean"}-${index}`,
-        })),
-      };
-    },
-    async sort({ items, sortDescriptor }) {
-      return {
-        items: [...items].sort((a, b) => {
-          let aVal = getKeyValue(a, sortDescriptor.column);
-          let bVal = getKeyValue(b, sortDescriptor.column);
+  const [filtro, setFiltro] = useState("");
+  const [ordenacao, setOrdenacao] = useState<{
+    coluna: keyof IVendaComEAN | null;
+    direcao: "asc" | "desc";
+  }>({ coluna: null, direcao: "asc" });
 
-          if (typeof aVal === "number" && typeof bVal === "number") {
-            return sortDescriptor.direction === "ascending"
-              ? aVal - bVal
-              : bVal - aVal;
-          }
+  const vendasFiltradas = useMemo(() => {
+    const termo = filtro.toLowerCase();
 
-          return sortDescriptor.direction === "ascending"
-            ? String(aVal).localeCompare(String(bVal))
-            : String(bVal).localeCompare(String(aVal));
-        }),
-      };
-    },
-  });
+    let resultado = vendas.filter((item) => {
+      return (
+        item.DS_PROD?.toLowerCase().includes(termo) ||
+        item.EAN?.toLowerCase().includes(termo)
+      );
+    });
 
-  const totalPaginas = Math.ceil(list.items.length / porPagina);
-  const vendasPaginadas = list.items.slice(
+    if (ordenacao.coluna) {
+      resultado = [...resultado].sort((a, b) => {
+        const aVal = a[ordenacao.coluna!];
+        const bVal = b[ordenacao.coluna!];
+
+        if (typeof aVal === "number" && typeof bVal === "number") {
+          return ordenacao.direcao === "asc" ? aVal - bVal : bVal - aVal;
+        }
+
+        return ordenacao.direcao === "asc"
+          ? String(aVal).localeCompare(String(bVal))
+          : String(bVal).localeCompare(String(aVal));
+      });
+    }
+
+    return resultado;
+  }, [vendas, filtro, ordenacao]);
+
+  const totalPaginas = Math.ceil(vendasFiltradas.length / porPagina);
+  const vendasPaginadas = vendasFiltradas.slice(
     (pagina - 1) * porPagina,
     pagina * porPagina
   );
 
   useEffect(() => {
-    list.reload();
-  }, [vendas]);
+    setPagina(1); // resetar para página 1 ao filtrar
+  }, [filtro]);
+
+  const handleOrdenar = (coluna: keyof IVendaComEAN) => {
+    setOrdenacao((prev) => {
+      if (prev.coluna === coluna) {
+        return {
+          coluna,
+          direcao: prev.direcao === "asc" ? "desc" : "asc",
+        };
+      }
+
+      return { coluna, direcao: "asc" };
+    });
+  };
 
   return (
     <>
@@ -80,18 +97,29 @@ export function TabelaVendasPorProduto({
             Vendas por produto
           </h2>
           <p className="text-sm text-slate-700">
-            Exibindo {vendas.length === 0 ? 0 : (pagina - 1) * porPagina + 1}–
+            Exibindo{" "}
+            {vendasFiltradas.length === 0 ? 0 : (pagina - 1) * porPagina + 1}–
             {(pagina - 1) * porPagina + vendasPaginadas.length} de{" "}
-            {vendas.length} resultados
+            {vendasFiltradas.length} resultados
           </p>
         </div>
-        <Button
-          color="primary"
-          size="sm"
-          startContent={<ArrowDownToLine size={14} />}
-        >
-          Baixar Excel
-        </Button>
+        <div className="flex gap-4 items-center">
+          <Input
+            placeholder="Pesquisar por nome ou EAN"
+            size="sm"
+            startContent={<Search color="#77767b" size={14} />}
+            value={filtro}
+            onChange={(e) => setFiltro(e.target.value)}
+          />
+          <Button
+            className="max-w-fit w-full"
+            color="primary"
+            size="sm"
+            startContent={<ArrowDownToLine size={14} />}
+          >
+            Baixar Excel
+          </Button>
+        </div>
       </div>
 
       <Table
@@ -100,26 +128,22 @@ export function TabelaVendasPorProduto({
         className="max-h-[450px]"
         maxTableHeight={450}
         shadow="sm"
-        sortDescriptor={list.sortDescriptor}
-        onSortChange={list.sort}
       >
         <TableHeader>
-          <TableColumn key="DS_PROD" allowsSorting>
+          <TableColumn onClick={() => handleOrdenar("DS_PROD")}>
             Descrição
           </TableColumn>
-          <TableColumn key="QT_IT" allowsSorting>
+          <TableColumn onClick={() => handleOrdenar("QT_IT")}>
             Quantidade
           </TableColumn>
-          <TableColumn key="VLR_LIQ_VD" allowsSorting>
+          <TableColumn onClick={() => handleOrdenar("VLR_LIQ_VD")}>
             Valor Líquido
           </TableColumn>
-          <TableColumn key="VLR_VD" allowsSorting>
+          <TableColumn onClick={() => handleOrdenar("VLR_VD")}>
             Valor Total
           </TableColumn>
-          <TableColumn key="EAN" allowsSorting>
-            EAN
-          </TableColumn>
-          <TableColumn key="CD_PROD" allowsSorting>
+          <TableColumn onClick={() => handleOrdenar("EAN")}>EAN</TableColumn>
+          <TableColumn onClick={() => handleOrdenar("CD_PROD")}>
             Código
           </TableColumn>
         </TableHeader>
@@ -129,10 +153,13 @@ export function TabelaVendasPorProduto({
           items={vendasPaginadas}
         >
           {(item) => (
-            <TableRow key={item.__key}>
-              {(columnKey) => (
-                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
-              )}
+            <TableRow key={`${item.CD_PROD}-${item.EAN ?? "sem-ean"}`}>
+              <TableCell>{item.DS_PROD}</TableCell>
+              <TableCell>{item.QT_IT}</TableCell>
+              <TableCell>{item.VLR_LIQ_VD}</TableCell>
+              <TableCell>{item.VLR_VD}</TableCell>
+              <TableCell>{item.EAN}</TableCell>
+              <TableCell>{item.CD_PROD}</TableCell>
             </TableRow>
           )}
         </TableBody>

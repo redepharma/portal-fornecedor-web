@@ -10,11 +10,10 @@ import {
   Pagination,
   Spinner,
   Button,
-  getKeyValue,
+  Input,
 } from "@heroui/react";
-import { useAsyncList } from "@react-stately/data";
-import { useEffect } from "react";
-import { ArrowDownToLine } from "lucide-react";
+import { useMemo, useState, useEffect } from "react";
+import { ArrowDownToLine, Search } from "lucide-react";
 
 import { IEstoqueAgrupado } from "../types/estoqueAgrupado.interface";
 
@@ -33,44 +32,62 @@ export function TabelaEstoquePorLoja({
   setPagina,
   loading,
 }: Props) {
-  const list = useAsyncList({
-    async load() {
-      return {
-        items: estoque.map((item, index) => ({
-          ...item,
-          __key: `${item.cdProd}-${item.cdFilial}-${index}`,
-        })),
-      };
-    },
-    async sort({ items, sortDescriptor }) {
-      return {
-        items: [...items].sort((a, b) => {
-          const aVal = getKeyValue(a, sortDescriptor.column);
-          const bVal = getKeyValue(b, sortDescriptor.column);
+  const [filtro, setFiltro] = useState("");
+  const [ordenacao, setOrdenacao] = useState<{
+    coluna: keyof IEstoqueAgrupado | null;
+    direcao: "asc" | "desc";
+  }>({ coluna: null, direcao: "asc" });
 
-          if (typeof aVal === "number" && typeof bVal === "number") {
-            return sortDescriptor.direction === "ascending"
-              ? aVal - bVal
-              : bVal - aVal;
-          }
+  const dadosFiltrados = useMemo(() => {
+    const termo = filtro.toLowerCase();
 
-          return sortDescriptor.direction === "ascending"
-            ? String(aVal).localeCompare(String(bVal))
-            : String(bVal).localeCompare(String(aVal));
-        }),
-      };
-    },
-  });
+    let resultado = estoque.filter((item) => {
+      return (
+        item.dsProd?.toLowerCase().includes(termo) ||
+        item.ean01?.toLowerCase().includes(termo)
+      );
+    });
 
-  const totalPaginas = Math.ceil(list.items.length / porPagina);
-  const paginados = list.items.slice(
+    if (ordenacao.coluna) {
+      resultado = [...resultado].sort((a, b) => {
+        const aVal = a[ordenacao.coluna!];
+        const bVal = b[ordenacao.coluna!];
+
+        if (typeof aVal === "number" && typeof bVal === "number") {
+          return ordenacao.direcao === "asc" ? aVal - bVal : bVal - aVal;
+        }
+
+        return ordenacao.direcao === "asc"
+          ? String(aVal).localeCompare(String(bVal))
+          : String(bVal).localeCompare(String(aVal));
+      });
+    }
+
+    return resultado;
+  }, [estoque, filtro, ordenacao]);
+
+  const totalPaginas = Math.ceil(dadosFiltrados.length / porPagina);
+  const paginados = dadosFiltrados.slice(
     (pagina - 1) * porPagina,
     pagina * porPagina
   );
 
   useEffect(() => {
-    list.reload();
-  }, [estoque]);
+    setPagina(1); // reseta a paginação ao pesquisar
+  }, [filtro]);
+
+  const handleOrdenar = (coluna: keyof IEstoqueAgrupado) => {
+    setOrdenacao((prev) => {
+      if (prev.coluna === coluna) {
+        return {
+          coluna,
+          direcao: prev.direcao === "asc" ? "desc" : "asc",
+        };
+      }
+
+      return { coluna, direcao: "asc" };
+    });
+  };
 
   return (
     <div>
@@ -78,17 +95,29 @@ export function TabelaEstoquePorLoja({
         <h2 className="text-lg text-zinc-800 font-semibold">
           Estoque por filial
         </h2>
-        <Button
-          color="primary"
-          size="sm"
-          startContent={<ArrowDownToLine size={14} />}
-        >
-          Baixar Excel
-        </Button>
+        <div className="flex gap-4 items-center">
+          <Input
+            placeholder="Pesquisar por nome ou EAN"
+            size="sm"
+            startContent={<Search color="#77767b" size={14} />}
+            value={filtro}
+            onChange={(e) => setFiltro(e.target.value)}
+          />
+          <Button
+            className="max-w-fit w-full"
+            color="primary"
+            size="sm"
+            startContent={<ArrowDownToLine size={14} />}
+          >
+            Baixar Excel
+          </Button>
+        </div>
       </div>
+
       <p className="text-sm text-slate-700 mb-2">
-        Exibindo {estoque.length === 0 ? 0 : (pagina - 1) * porPagina + 1}–
-        {(pagina - 1) * porPagina + paginados.length} de {estoque.length}{" "}
+        Exibindo{" "}
+        {dadosFiltrados.length === 0 ? 0 : (pagina - 1) * porPagina + 1}–
+        {(pagina - 1) * porPagina + paginados.length} de {dadosFiltrados.length}{" "}
         resultados
       </p>
 
@@ -98,23 +127,19 @@ export function TabelaEstoquePorLoja({
         className="max-h-[450px]"
         maxTableHeight={450}
         shadow="sm"
-        sortDescriptor={list.sortDescriptor}
-        onSortChange={list.sort}
       >
         <TableHeader>
-          <TableColumn key="cdFilial" allowsSorting>
+          <TableColumn onClick={() => handleOrdenar("cdFilial")}>
             Filial
           </TableColumn>
-          <TableColumn key="dsProd" allowsSorting>
+          <TableColumn onClick={() => handleOrdenar("dsProd")}>
             Descrição
           </TableColumn>
-          <TableColumn key="qtEst" allowsSorting>
+          <TableColumn onClick={() => handleOrdenar("qtEst")}>
             Estoque
           </TableColumn>
-          <TableColumn key="ean01" allowsSorting>
-            EAN
-          </TableColumn>
-          <TableColumn key="cdProd" allowsSorting>
+          <TableColumn onClick={() => handleOrdenar("ean01")}>EAN</TableColumn>
+          <TableColumn onClick={() => handleOrdenar("cdProd")}>
             Código
           </TableColumn>
         </TableHeader>
@@ -124,10 +149,12 @@ export function TabelaEstoquePorLoja({
           items={paginados}
         >
           {(item) => (
-            <TableRow key={item.__key}>
-              {(columnKey) => (
-                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
-              )}
+            <TableRow key={`${item.cdProd}-${item.cdFilial}`}>
+              <TableCell>{item.cdFilial}</TableCell>
+              <TableCell>{item.dsProd}</TableCell>
+              <TableCell>{item.qtEst}</TableCell>
+              <TableCell>{item.ean01}</TableCell>
+              <TableCell>{item.cdProd}</TableCell>
             </TableRow>
           )}
         </TableBody>
