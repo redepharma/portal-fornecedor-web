@@ -1,12 +1,7 @@
 export interface IEstoque {
-  cdEmp: number;
-  cdProd: number;
-  ean01: string;
-  dsProd: string;
-  mediaf: number;
-  nmFabric: string;
-  cdFabric: string;
-  stsProd: string;
-  cdFilial: number;
-  qtEst: number;
+  CD_PROD: number;
+  CD_FILIAL: number;
+  EAN: string;
+  DS_PROD: string;
+  QT_EST: number;
 }

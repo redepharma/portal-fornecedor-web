@@ -21,7 +21,7 @@ import { FornecedorService } from "@/modules/fornecedor/fornecedor.service";
 import { useAuth } from "@/hooks/use-auth";
 import { TabelaEstoquePorProduto } from "@/modules/estoque/components/tabelaEstoquePorProduto";
 import { TabelaEstoquePorLoja } from "@/modules/estoque/components/tabelaEstoquePorLoja";
-import { IEstoque } from "@/modules/estoque/types/estoque.interface";
+import { IEstoqueAgrupado } from "@/modules/estoque/types/estoqueAgrupado.interface";
 import { EstoqueService } from "@/modules/estoque/estoque.service";
 
 function FornecedorEstoque() {
@@ -29,7 +29,12 @@ function FornecedorEstoque() {
   const [fabricantes, setFabricantes] = useState<IFabricante[]>([]);
   const [selecionados, setSelecionados] = useState<Selection>(new Set([]));
 
-  const [estoque, setEstoque] = useState<IEstoque[]>([]);
+  const [estoqueAgrupado, setEstoqueAgrupado] = useState<IEstoqueAgrupado[]>(
+    []
+  );
+  const [estoquePorFilial, setEstoquePorFilial] = useState<IEstoqueAgrupado[]>(
+    []
+  );
   const [loading, setLoading] = useState(false);
   const [pagina, setPagina] = useState(1);
   const porPagina = 10;
@@ -62,16 +67,21 @@ function FornecedorEstoque() {
     }
 
     setLoading(true);
-    setEstoque([]);
+    setEstoqueAgrupado([]);
 
     try {
-      const resposta = await EstoqueService.consultarEstoque(
+      const respostaAgrupados = await EstoqueService.consultarEstoque(
         selecionadosArray.map(String)
       );
 
-      setEstoque(resposta);
+      const respostaPorFilial = await EstoqueService.consultarEstoquePorFilial(
+        selecionadosArray.map(String)
+      );
 
-      if (resposta.length === 0) {
+      setEstoqueAgrupado(respostaAgrupados);
+      setEstoquePorFilial(respostaAgrupados);
+
+      if (respostaAgrupados.length === 0) {
         addToast({
           title: "Nenhum resultado encontrado",
           description:
@@ -80,7 +90,7 @@ function FornecedorEstoque() {
       } else {
         addToast({
           title: "Consulta concluída",
-          description: `Foram encontrados ${resposta.length} registros de estoque.`,
+          description: `Foram encontrados ${respostaAgrupados.length} registros de estoque.`,
           color: "default",
         });
       }
@@ -104,7 +114,7 @@ function FornecedorEstoque() {
 
   const handleLimparFiltros = () => {
     setSelecionados(new Set([]));
-    setEstoque([]);
+    setEstoqueAgrupado([]);
     setPagina(1);
 
     addToast({
@@ -166,7 +176,7 @@ function FornecedorEstoque() {
       <Tabs aria-label="Visualização de estoque" className="mt-4">
         <Tab key="produto" title="Por produto">
           <TabelaEstoquePorProduto
-            estoque={estoque}
+            estoque={estoqueAgrupado}
             loading={loading}
             pagina={pagina}
             porPagina={porPagina}
@@ -176,7 +186,7 @@ function FornecedorEstoque() {
 
         <Tab key="loja" title="Por loja">
           <TabelaEstoquePorLoja
-            estoque={estoque}
+            estoque={estoquePorFilial}
             loading={loading}
             pagina={pagina}
             porPagina={porPagina}

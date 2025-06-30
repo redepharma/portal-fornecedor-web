@@ -16,10 +16,10 @@ import { useAsyncList } from "@react-stately/data";
 import { useEffect } from "react";
 import { ArrowDownToLine } from "lucide-react";
 
-import { IEstoque } from "../types/estoque.interface";
+import { IEstoqueAgrupado } from "../types/estoqueAgrupado.interface";
 
 interface Props {
-  estoque: IEstoque[];
+  estoque: IEstoqueAgrupado[];
   pagina: number;
   porPagina: number;
   setPagina: (p: number) => void;

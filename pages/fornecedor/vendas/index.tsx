@@ -26,6 +26,7 @@ import { IVendaComEAN } from "@/modules/vendas/types/vendaComEan.interface";
 import { useAuth } from "@/hooks/use-auth";
 import { TabelaVendasPorProduto } from "@/modules/vendas/components/tabelaVendasPorProduto";
 import { TabelaVendasPorLoja } from "@/modules/vendas/components/tabelaVendasPorLoja";
+import { IVendaPorFilial } from "@/modules/vendas/types/vendaPorLoja.interface";
 
 function FornecedorVendas() {
   const { user } = useAuth();
@@ -36,7 +37,8 @@ function FornecedorVendas() {
     end: DateValue;
   } | null>(null);
 
-  const [vendas, setVendas] = useState<IVendaComEAN[]>([]);
+  const [vendasPorProduto, setVendasPorProduto] = useState<IVendaComEAN[]>([]);
+  const [vendasPorLoja, setVendasPorLoja] = useState<IVendaPorFilial[]>([]);
   const [loading, setLoading] = useState(false);
 
   const [pagina, setPagina] = useState(1);
@@ -67,29 +69,37 @@ function FornecedorVendas() {
     }
 
     setLoading(true);
-    setVendas([]);
+    setVendasPorProduto([]);
 
     const dataInicio = dataRange.start.toString();
     const dataFim = dataRange.end.toString();
 
     try {
-      const resultados: IVendaComEAN[] = [];
-      const codigos = Array.from(selecionados).map(String);
+      const resultadosPorProduto: IVendaComEAN[] = [];
+      const resultadosPorLoja: IVendaPorFilial[] = [];
+      const codigos = Array.from(selecionados).map(String).join(",");
 
-      for (const codigo of codigos) {
-        const resposta = await VendaService.consultarVendas({
-          codigoFabricante: codigo,
-          dataInicio,
-          dataFim,
-        });
+      const respostaPorProduto = await VendaService.consultarVendas({
+        codigoFabricante: codigos,
+        dataInicio,
+        dataFim,
+      });
 
-        resultados.push(...resposta);
-      }
+      resultadosPorProduto.push(...respostaPorProduto);
 
-      setVendas(resultados);
+      const respostaPorLoja = await VendaService.consultarVendasPorLoja({
+        codigoFabricante: codigos,
+        dataInicio,
+        dataFim,
+      });
+
+      resultadosPorLoja.push(...respostaPorLoja);
+
+      setVendasPorProduto(resultadosPorProduto);
+      setVendasPorLoja(resultadosPorLoja);
       setPagina(1);
 
-      if (resultados.length === 0) {
+      if (resultadosPorProduto.length === 0) {
         addToast({
           title: "Nenhum dado encontrado",
           description: "Não foram encontradas vendas no período informado.",
@@ -97,7 +107,7 @@ function FornecedorVendas() {
       } else {
         addToast({
           title: "Consulta realizada com sucesso",
-          description: `Foram encontradas ${resultados.length} vendas.`,
+          description: `Foram encontradas ${resultadosPorProduto.length} vendas.`,
         });
       }
     } catch (erro: any) {
@@ -119,7 +129,7 @@ function FornecedorVendas() {
   const handleLimparFiltros = () => {
     setSelecionados(new Set([]));
     setDataRange(null);
-    setVendas([]);
+    setVendasPorProduto([]);
     setPagina(1);
 
     addToast({
@@ -205,7 +215,7 @@ function FornecedorVendas() {
             pagina={pagina}
             porPagina={porPagina}
             setPagina={setPagina}
-            vendas={vendas}
+            vendas={vendasPorProduto}
           />
         </Tab>
 
@@ -215,7 +225,7 @@ function FornecedorVendas() {
             pagina={pagina}
             porPagina={porPagina}
             setPagina={setPagina}
-            vendas={vendas}
+            vendas={vendasPorLoja}
           />
         </Tab>
       </Tabs>
