@@ -79,7 +79,7 @@ function FornecedorEstoque() {
       );
 
       setEstoqueAgrupado(respostaAgrupados);
-      setEstoquePorFilial(respostaAgrupados);
+      setEstoquePorFilial(respostaPorFilial);
 
       if (respostaAgrupados.length === 0) {
         addToast({

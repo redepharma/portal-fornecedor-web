@@ -17,8 +17,9 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { ArrowDownToLine, Search } from "lucide-react";
 
-import { IVendaComEAN } from "@/modules/vendas/types/vendaComEan.interface";
 import { VendaService } from "../vendas.service";
+
+import { IVendaComEAN } from "@/modules/vendas/types/vendaComEan.interface";
 
 interface Props {
   vendas: IVendaComEAN[];
@@ -48,33 +49,64 @@ export function TabelaVendasPorLoja({
     direcao: "asc" | "desc";
   }>({ coluna: null, direcao: "asc" });
 
-  // Filtro + ordenação aplicados
+  useEffect(() => {
+    setPagina(1);
+  }, [filtro]);
+
+  const handleOrdenar = (coluna: keyof IVendaComEAN) => {
+    setOrdenacao((prev) => {
+      const novaDirecao =
+        prev.coluna === coluna && prev.direcao === "asc" ? "desc" : "asc";
+
+      return { coluna, direcao: novaDirecao };
+    });
+  };
+
+  const handleExportarExcel = async () => {
+    setBaixandoExcel(true);
+    try {
+      await VendaService.exportarVendasPorFilialExcel({
+        codigoFabricante: codigosFabricantes.join(","),
+        dataInicio: dataInicio ?? "",
+        dataFim: dataFim ?? "",
+      });
+    } catch (error) {
+      const mensagem =
+        error instanceof Error ? error.message : "Erro ao baixar o Excel";
+
+      addToast({
+        title: "Erro ao baixar Excel",
+        description: mensagem,
+        color: "danger",
+      });
+    } finally {
+      setBaixandoExcel(false);
+    }
+  };
+
   const vendasFiltradas = useMemo(() => {
     const termo = filtro.toLowerCase();
 
-    let resultado = vendas.filter((item) => {
-      return (
+    const filtradas = vendas.filter(
+      (item) =>
         item.DS_PROD?.toLowerCase().includes(termo) ||
         item.EAN?.toLowerCase().includes(termo)
-      );
+    );
+
+    if (!ordenacao.coluna) return filtradas;
+
+    return [...filtradas].sort((a, b) => {
+      const aVal = a[ordenacao.coluna!];
+      const bVal = b[ordenacao.coluna!];
+
+      if (typeof aVal === "number" && typeof bVal === "number") {
+        return ordenacao.direcao === "asc" ? aVal - bVal : bVal - aVal;
+      }
+
+      return ordenacao.direcao === "asc"
+        ? String(aVal).localeCompare(String(bVal))
+        : String(bVal).localeCompare(String(aVal));
     });
-
-    if (ordenacao.coluna) {
-      resultado = [...resultado].sort((a, b) => {
-        const aVal = a[ordenacao.coluna!];
-        const bVal = b[ordenacao.coluna!];
-
-        if (typeof aVal === "number" && typeof bVal === "number") {
-          return ordenacao.direcao === "asc" ? aVal - bVal : bVal - aVal;
-        }
-
-        return ordenacao.direcao === "asc"
-          ? String(aVal).localeCompare(String(bVal))
-          : String(bVal).localeCompare(String(aVal));
-      });
-    }
-
-    return resultado;
   }, [vendas, filtro, ordenacao]);
 
   const vendasPaginadas = useMemo(() => {
@@ -83,27 +115,9 @@ export function TabelaVendasPorLoja({
 
   const totalPaginas = Math.ceil(vendasFiltradas.length / porPagina);
 
-  const totalLiquido = useMemo(
-    () => vendasFiltradas.reduce((soma, v) => soma + (v.VLR_LIQ_VD || 0), 0),
-    [vendasFiltradas]
-  );
-
-  useEffect(() => {
-    setPagina(1);
-  }, [filtro]);
-
-  const handleOrdenar = (coluna: keyof IVendaComEAN) => {
-    setOrdenacao((prev) => {
-      if (prev.coluna === coluna) {
-        return {
-          coluna,
-          direcao: prev.direcao === "asc" ? "desc" : "asc",
-        };
-      }
-
-      return { coluna, direcao: "asc" };
-    });
-  };
+  const totalLiquido = useMemo(() => {
+    return vendasFiltradas.reduce((soma, v) => soma + (v.VLR_LIQ_VD || 0), 0);
+  }, [vendasFiltradas]);
 
   return (
     <div>
@@ -129,34 +143,13 @@ export function TabelaVendasPorLoja({
             isLoading={baixandoExcel}
             size="sm"
             startContent={<ArrowDownToLine size={14} />}
-            onPress={async () => {
-              setBaixandoExcel(true);
-              try {
-                await VendaService.exportarVendasPorFilialExcel({
-                  codigoFabricante: codigosFabricantes.join(","),
-                  dataInicio: dataInicio ?? "",
-                  dataFim: dataFim ?? "",
-                });
-              } catch (error) {
-                const mensagem =
-                  error instanceof Error
-                    ? error.message
-                    : "Erro ao baixar o Excel";
-
-                addToast({
-                  title: "Erro ao baixar Excel",
-                  description: mensagem,
-                  color: "danger",
-                });
-              } finally {
-                setBaixandoExcel(false);
-              }
-            }}
+            onPress={handleExportarExcel}
           >
             Baixar Excel
           </Button>
         </div>
       </div>
+
       <div className="flex gap-2 mb-2">
         <p className="text-sm text-slate-600 font-medium">
           Total de vendas líquidas no período:{" "}
@@ -179,28 +172,23 @@ export function TabelaVendasPorLoja({
         shadow="sm"
       >
         <TableHeader>
-          <TableColumn allowsSorting onClick={() => handleOrdenar("CD_FILIAL")}>
+          <TableColumn onClick={() => handleOrdenar("CD_FILIAL")}>
             Filial
           </TableColumn>
-          <TableColumn allowsSorting onClick={() => handleOrdenar("DS_PROD")}>
+          <TableColumn onClick={() => handleOrdenar("DS_PROD")}>
             Descrição
           </TableColumn>
-          <TableColumn allowsSorting onClick={() => handleOrdenar("QT_IT")}>
+          <TableColumn onClick={() => handleOrdenar("QT_IT")}>
             Quantidade
           </TableColumn>
-          <TableColumn
-            allowsSorting
-            onClick={() => handleOrdenar("VLR_LIQ_VD")}
-          >
+          <TableColumn onClick={() => handleOrdenar("VLR_LIQ_VD")}>
             Valor Líquido
           </TableColumn>
-          <TableColumn allowsSorting onClick={() => handleOrdenar("VLR_VD")}>
+          <TableColumn onClick={() => handleOrdenar("VLR_VD")}>
             Valor Total
           </TableColumn>
-          <TableColumn allowsSorting onClick={() => handleOrdenar("EAN")}>
-            EAN
-          </TableColumn>
-          <TableColumn allowsSorting onClick={() => handleOrdenar("CD_PROD")}>
+          <TableColumn onClick={() => handleOrdenar("EAN")}>EAN</TableColumn>
+          <TableColumn onClick={() => handleOrdenar("CD_PROD")}>
             Código
           </TableColumn>
         </TableHeader>

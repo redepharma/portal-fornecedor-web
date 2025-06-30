@@ -41,47 +41,12 @@ export function TabelaVendasPorProduto({
   dataInicio,
   dataFim,
 }: TabelaVendasProps) {
-  const [baixandoExcel, setBaixandoExcel] = useState(false);
-
   const [filtro, setFiltro] = useState("");
   const [ordenacao, setOrdenacao] = useState<{
     coluna: keyof IVendaComEAN | null;
     direcao: "asc" | "desc";
   }>({ coluna: null, direcao: "asc" });
-
-  const vendasFiltradas = useMemo(() => {
-    const termo = filtro.toLowerCase();
-
-    let resultado = vendas.filter((item) => {
-      return (
-        item.DS_PROD?.toLowerCase().includes(termo) ||
-        item.EAN?.toLowerCase().includes(termo)
-      );
-    });
-
-    if (ordenacao.coluna) {
-      resultado = [...resultado].sort((a, b) => {
-        const aVal = a[ordenacao.coluna!];
-        const bVal = b[ordenacao.coluna!];
-
-        if (typeof aVal === "number" && typeof bVal === "number") {
-          return ordenacao.direcao === "asc" ? aVal - bVal : bVal - aVal;
-        }
-
-        return ordenacao.direcao === "asc"
-          ? String(aVal).localeCompare(String(bVal))
-          : String(bVal).localeCompare(String(aVal));
-      });
-    }
-
-    return resultado;
-  }, [vendas, filtro, ordenacao]);
-
-  const totalPaginas = Math.ceil(vendasFiltradas.length / porPagina);
-  const vendasPaginadas = vendasFiltradas.slice(
-    (pagina - 1) * porPagina,
-    pagina * porPagina
-  );
+  const [baixandoExcel, setBaixandoExcel] = useState(false);
 
   useEffect(() => {
     setPagina(1);
@@ -89,16 +54,65 @@ export function TabelaVendasPorProduto({
 
   const handleOrdenar = (coluna: keyof IVendaComEAN) => {
     setOrdenacao((prev) => {
-      if (prev.coluna === coluna) {
-        return {
-          coluna,
-          direcao: prev.direcao === "asc" ? "desc" : "asc",
-        };
-      }
+      const novaDirecao =
+        prev.coluna === coluna && prev.direcao === "asc" ? "desc" : "asc";
 
-      return { coluna, direcao: "asc" };
+      return { coluna, direcao: novaDirecao };
     });
   };
+
+  const handleExportarExcel = async () => {
+    setBaixandoExcel(true);
+    try {
+      await VendaService.exportarVendasExcel({
+        codigoFabricante: codigosFabricantes.join(","),
+        dataInicio: dataInicio ?? "",
+        dataFim: dataFim ?? "",
+      });
+    } catch (error) {
+      const mensagem =
+        error instanceof Error ? error.message : "Erro ao baixar o Excel";
+
+      addToast({
+        title: "Erro ao baixar Excel",
+        description: mensagem,
+        color: "danger",
+      });
+    } finally {
+      setBaixandoExcel(false);
+    }
+  };
+
+  const vendasFiltradas = useMemo(() => {
+    const termo = filtro.toLowerCase();
+
+    const filtradas = vendas.filter(
+      (item) =>
+        item.DS_PROD?.toLowerCase().includes(termo) ||
+        item.EAN?.toLowerCase().includes(termo)
+    );
+
+    if (!ordenacao.coluna) return filtradas;
+
+    return [...filtradas].sort((a, b) => {
+      const aVal = a[ordenacao.coluna!];
+      const bVal = b[ordenacao.coluna!];
+
+      if (typeof aVal === "number" && typeof bVal === "number") {
+        return ordenacao.direcao === "asc" ? aVal - bVal : bVal - aVal;
+      }
+
+      return ordenacao.direcao === "asc"
+        ? String(aVal).localeCompare(String(bVal))
+        : String(bVal).localeCompare(String(aVal));
+    });
+  }, [vendas, filtro, ordenacao]);
+
+  const totalPaginas = Math.ceil(vendasFiltradas.length / porPagina);
+  const vendasPaginadas = vendasFiltradas.slice(
+    (pagina - 1) * porPagina,
+    pagina * porPagina
+  );
 
   return (
     <>
@@ -135,29 +149,7 @@ export function TabelaVendasPorProduto({
             isLoading={baixandoExcel}
             size="sm"
             startContent={<ArrowDownToLine size={14} />}
-            onPress={async () => {
-              setBaixandoExcel(true);
-              try {
-                await VendaService.exportarVendasExcel({
-                  codigoFabricante: codigosFabricantes.join(","),
-                  dataInicio: dataInicio ?? "",
-                  dataFim: dataFim ?? "",
-                });
-              } catch (error) {
-                const mensagem =
-                  error instanceof Error
-                    ? error.message
-                    : "Erro ao baixar o Excel";
-
-                addToast({
-                  title: "Erro ao baixar Excel",
-                  description: mensagem,
-                  color: "danger",
-                });
-              } finally {
-                setBaixandoExcel(false);
-              }
-            }}
+            onPress={handleExportarExcel}
           >
             Baixar Excel
           </Button>

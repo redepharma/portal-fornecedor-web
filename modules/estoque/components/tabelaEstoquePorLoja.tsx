@@ -41,56 +41,54 @@ export function TabelaEstoquePorLoja({
     direcao: "asc" | "desc";
   }>({ coluna: null, direcao: "asc" });
 
-  const dadosFiltrados = useMemo(() => {
-    const termo = filtro.toLowerCase();
-
-    let resultado = estoque.filter((item) => {
-      return (
-        item.dsProd?.toLowerCase().includes(termo) ||
-        item.ean01?.toLowerCase().includes(termo)
-      );
-    });
-
-    if (ordenacao.coluna) {
-      resultado = [...resultado].sort((a, b) => {
-        const aVal = a[ordenacao.coluna!];
-        const bVal = b[ordenacao.coluna!];
-
-        if (typeof aVal === "number" && typeof bVal === "number") {
-          return ordenacao.direcao === "asc" ? aVal - bVal : bVal - aVal;
-        }
-
-        return ordenacao.direcao === "asc"
-          ? String(aVal).localeCompare(String(bVal))
-          : String(bVal).localeCompare(String(aVal));
-      });
-    }
-
-    return resultado;
-  }, [estoque, filtro, ordenacao]);
-
-  const totalPaginas = Math.ceil(dadosFiltrados.length / porPagina);
-  const paginados = dadosFiltrados.slice(
-    (pagina - 1) * porPagina,
-    pagina * porPagina
-  );
-
   useEffect(() => {
-    setPagina(1); // reseta a paginação ao pesquisar
+    setPagina(1);
   }, [filtro]);
 
   const handleOrdenar = (coluna: keyof IEstoqueAgrupado) => {
     setOrdenacao((prev) => {
-      if (prev.coluna === coluna) {
-        return {
-          coluna,
-          direcao: prev.direcao === "asc" ? "desc" : "asc",
-        };
-      }
+      const novaDirecao =
+        prev.coluna === coluna && prev.direcao === "asc" ? "desc" : "asc";
 
-      return { coluna, direcao: "asc" };
+      return { coluna, direcao: novaDirecao };
     });
   };
+
+  const handleExportar = () => {
+    if (estoque.length === 0) return;
+    EstoqueService.exportarExcelEstoquePorFilial(codigosFabricantes);
+  };
+
+  const dadosFiltrados = useMemo(() => {
+    const termo = filtro.toLowerCase();
+
+    const filtrados = estoque.filter(
+      (item) =>
+        item.dsProd?.toLowerCase().includes(termo) ||
+        item.ean01?.toLowerCase().includes(termo)
+    );
+
+    if (!ordenacao.coluna) return filtrados;
+
+    return [...filtrados].sort((a, b) => {
+      const aVal = a[ordenacao.coluna!];
+      const bVal = b[ordenacao.coluna!];
+
+      if (typeof aVal === "number" && typeof bVal === "number") {
+        return ordenacao.direcao === "asc" ? aVal - bVal : bVal - aVal;
+      }
+
+      return ordenacao.direcao === "asc"
+        ? String(aVal).localeCompare(String(bVal))
+        : String(bVal).localeCompare(String(aVal));
+    });
+  }, [estoque, filtro, ordenacao]);
+
+  const paginados = useMemo(() => {
+    return dadosFiltrados.slice((pagina - 1) * porPagina, pagina * porPagina);
+  }, [dadosFiltrados, pagina, porPagina]);
+
+  const totalPaginas = Math.ceil(dadosFiltrados.length / porPagina);
 
   return (
     <div>
@@ -112,9 +110,7 @@ export function TabelaEstoquePorLoja({
             isDisabled={estoque.length === 0}
             size="sm"
             startContent={<ArrowDownToLine size={14} />}
-            onPress={() =>
-              EstoqueService.exportarExcelEstoquePorFilial(codigosFabricantes)
-            }
+            onPress={handleExportar}
           >
             Baixar Excel
           </Button>
