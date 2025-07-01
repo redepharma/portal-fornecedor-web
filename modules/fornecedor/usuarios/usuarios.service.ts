@@ -1,4 +1,4 @@
-import { apiClient } from "../api/api.client";
+import { apiClient } from "../../api/api.client";
 
 import { CriarUsuarioDto } from "./types/criarUsuario.dto";
 import { UpdateUsuarioDto } from "./types/updateUsuario.dto";

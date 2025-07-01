@@ -8,6 +8,7 @@ import { NavItem } from "./navItem";
 
 import { useAuth } from "@/hooks/use-auth";
 import { logout } from "@/services/auth.service";
+import { Role } from "@/types/auth.types";
 
 export function Sidebar() {
   const { user, setUser } = useAuth();
@@ -46,6 +47,15 @@ export function Sidebar() {
         >
           Estoque
         </NavItem>
+        {user?.roles?.includes("admin") && (
+          <NavItem
+            currentPath={pathname}
+            href="/fornecedor/usuarios"
+            icon={<Package size={18} />}
+          >
+            Usuários
+          </NavItem>
+        )}
       </div>
 
       <button

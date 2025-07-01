@@ -8,12 +8,13 @@ import DefaultLayout from "@/layouts/default";
 import {
   listarUsuarios,
   removerUsuario,
-} from "@/modules/gerenciar/usuarios.service";
-import { IUsuario } from "@/modules/gerenciar/types/usuario.interface";
-import { ModalCadastrarUsuario } from "@/modules/gerenciar/componentes/modalCadastrarUsuario";
-import { UsuarioTable } from "@/modules/gerenciar/componentes/tabelaUsuarios";
+} from "@/modules/fornecedor/usuarios/usuarios.service";
+import { IUsuario } from "@/modules/fornecedor/usuarios/types/usuario.interface";
+import { ModalCadastrarUsuario } from "@/modules/fornecedor/usuarios/componentes/modalCadastrarUsuario";
+import { UsuarioTable } from "@/modules/fornecedor/usuarios/componentes/tabelaUsuarios";
+import { withRoleProtection } from "@/hoc/withRoleProtection";
 
-export default function GerenciarUsuariosPage() {
+function GerenciarUsuariosPage() {
   const [usuarios, setUsuarios] = useState<IUsuario[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [pagina, setPagina] = useState(1);
@@ -163,3 +164,5 @@ export default function GerenciarUsuariosPage() {
     </DefaultLayout>
   );
 }
+
+export default withRoleProtection(GerenciarUsuariosPage, ["admin"]);

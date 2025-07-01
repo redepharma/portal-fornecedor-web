@@ -17,16 +17,16 @@ import { DateValue } from "@internationalized/date";
 import { Select, SelectItem } from "@heroui/react";
 import { Eraser, Search } from "lucide-react";
 
-import { VendaService } from "@/modules/vendas/vendas.service";
+import { VendaService } from "@/modules/fornecedor/vendas/vendas.service";
 import { withRoleProtection } from "@/hoc/withRoleProtection";
 import DefaultLayout from "@/layouts/default";
 import { IFabricante } from "@/modules/fornecedor/types/fabricante.interface";
 import { FornecedorService } from "@/modules/fornecedor/fornecedor.service";
-import { IVendaComEAN } from "@/modules/vendas/types/vendaComEan.interface";
+import { IVendaComEAN } from "@/modules/fornecedor/vendas/types/vendaComEan.interface";
 import { useAuth } from "@/hooks/use-auth";
-import { TabelaVendasPorProduto } from "@/modules/vendas/components/tabelaVendasPorProduto";
-import { TabelaVendasPorLoja } from "@/modules/vendas/components/tabelaVendasPorLoja";
-import { IVendaPorFilial } from "@/modules/vendas/types/vendaPorLoja.interface";
+import { TabelaVendasPorProduto } from "@/modules/fornecedor/vendas/components/tabelaVendasPorProduto";
+import { TabelaVendasPorLoja } from "@/modules/fornecedor/vendas/components/tabelaVendasPorLoja";
+import { IVendaPorFilial } from "@/modules/fornecedor/vendas/types/vendaPorLoja.interface";
 
 function FornecedorVendas() {
   const { user } = useAuth();

@@ -19,7 +19,7 @@ import { ArrowDownToLine, Search } from "lucide-react";
 
 import { VendaService } from "../vendas.service";
 
-import { IVendaComEAN } from "@/modules/vendas/types/vendaComEan.interface";
+import { IVendaComEAN } from "@/modules/fornecedor/vendas/types/vendaComEan.interface";
 
 interface Props {
   vendas: IVendaComEAN[];

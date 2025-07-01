@@ -19,10 +19,10 @@ import DefaultLayout from "@/layouts/default";
 import { IFabricante } from "@/modules/fornecedor/types/fabricante.interface";
 import { FornecedorService } from "@/modules/fornecedor/fornecedor.service";
 import { useAuth } from "@/hooks/use-auth";
-import { TabelaEstoquePorProduto } from "@/modules/estoque/components/tabelaEstoquePorProduto";
-import { TabelaEstoquePorLoja } from "@/modules/estoque/components/tabelaEstoquePorLoja";
-import { IEstoqueAgrupado } from "@/modules/estoque/types/estoqueAgrupado.interface";
-import { EstoqueService } from "@/modules/estoque/estoque.service";
+import { TabelaEstoquePorProduto } from "@/modules/fornecedor/estoque/components/tabelaEstoquePorProduto";
+import { TabelaEstoquePorLoja } from "@/modules/fornecedor/estoque/components/tabelaEstoquePorLoja";
+import { IEstoqueAgrupado } from "@/modules/fornecedor/estoque/types/estoqueAgrupado.interface";
+import { EstoqueService } from "@/modules/fornecedor/estoque/estoque.service";
 
 function FornecedorEstoque() {
   const { user } = useAuth();

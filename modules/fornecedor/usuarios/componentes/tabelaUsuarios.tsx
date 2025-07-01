@@ -12,8 +12,8 @@ import {
 } from "@heroui/react";
 import { Trash2 } from "lucide-react";
 
-import { IUsuario } from "@/modules/gerenciar/types/usuario.interface";
-import { ModalEditarUsuario } from "@/modules/gerenciar/componentes/modalEditarusuario";
+import { IUsuario } from "@/modules/fornecedor/usuarios/types/usuario.interface";
+import { ModalEditarUsuario } from "@/modules/fornecedor/usuarios/componentes/modalEditarusuario";
 
 interface UsuarioTableProps {
   usuarios: IUsuario[];

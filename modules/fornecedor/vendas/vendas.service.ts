@@ -1,4 +1,4 @@
-import { apiClient } from "../api/api.client";
+import { apiClient } from "../../api/api.client";
 
 import { ConsultaVendaDTO } from "./types/consultaVenda.dto";
 import { IVendaComEAN } from "./types/vendaComEan.interface";
