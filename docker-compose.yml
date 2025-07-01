@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  portal_fornecedor_web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: portal_fornecedor_web
+    ports:
+      - "3001:3000"
+    networks:
+      - traefik
+      - app-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web-portal-fornecedor.rule=Host(`webportalfornecedor.nelfarma.dev.br`)"
+      - "traefik.http.routers.web-portal-fornecedor.entrypoints=websecure"
+      - "traefik.http.routers.web-portal-fornecedor.tls.certresolver=cloudflare"
+      - "traefik.http.services.web-portal-fornecedor.loadbalancer.server.port=3000"
+      - "traefik.http.routers.web-portal-fornecedor.middlewares=headers-seguranca"
+
+networks:
+  traefik:
+    external: true
+
+  app-network:
+    driver: bridge
