@@ -239,4 +239,4 @@ function FornecedorVendas() {
   );
 }
 
-export default withRoleProtection(FornecedorVendas, ["fornecedor"]);
+export default withRoleProtection(FornecedorVendas, ["fornecedor", "admin"]);

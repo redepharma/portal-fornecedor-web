@@ -6,6 +6,7 @@ const PUBLIC_PATHS = [
   "/_next",
   "/favicon.ico",
   "/404",
+  "/logo.png",
 ];
 
 export function middleware(req: NextRequest) {

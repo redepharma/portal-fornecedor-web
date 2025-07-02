@@ -200,4 +200,4 @@ function FornecedorEstoque() {
   );
 }
 
-export default withRoleProtection(FornecedorEstoque, ["fornecedor"]);
+export default withRoleProtection(FornecedorEstoque, ["fornecedor", "admin"]);

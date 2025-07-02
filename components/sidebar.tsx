@@ -23,10 +23,7 @@ export function Sidebar() {
   return (
     <aside className="w-64 bg-zinc-100 border-r h-full shadow-sm p-4 flex flex-col justify-between">
       <div>
-        <img alt="Logo" className="w-32 mx-auto mb-1" src="/logo.png" />
-        <h2 className="text-lg font-bold text-slate-800 text-center">
-          Portal do Fornecedor
-        </h2>
+        <img alt="Logo" className="w-44 mx-auto mb-1" src="/logo.png" />
         <Divider className="my-4" />
         <p className="font-bold text-slate-700 text-center">{user?.nome}</p>
         <Divider className="my-4" />

@@ -68,7 +68,18 @@ export default function LoginPage() {
   return (
     <>
       <Head />
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
+      <div
+        className="min-h-screen flex flex-col items-center justify-center bg-slate-50 p-4 gap-4"
+        style={{
+          backgroundImage: 'url("/login-bg.png")',
+          backgroundRepeat: "repeat",
+          backgroundPosition: "center",
+          backgroundSize: "contain",
+        }}
+      >
+        <div className="max-w-xs w-full p-4 border bg-white shadow-xl rounded-2xl text-center">
+          <img alt="logo" className="mx-auto w-44" src="/logo.png" />
+        </div>
         <Card className="max-w-xs w-full p-4 border bg-white shadow-xl rounded-2xl">
           <CardHeader className="flex flex-col items-start">
             <h1 className="text-2xl font-semibold text-slate-800">
