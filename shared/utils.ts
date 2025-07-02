@@ -10,7 +10,7 @@ export function getApiBaseUrl(): string {
 
     if (hostname === "fornecedor.nelfarma.dev.br") {
       return (
-        process.env.NEXT_PUBLIC_API_BASE_URL ||
+        process.env.NEXT_PUBLIC_API_BASE_URL_EXTERNA ||
         "https://apifornecedor.nelfarma.dev.br"
       );
     }
