@@ -38,6 +38,7 @@ export function ModalCadastrarUsuario({
     roles: "fornecedor",
   });
   const [loading, setLoading] = useState(false);
+  const [codigoPendente, setCodigoPendente] = useState("");
 
   const handleChange = (field: keyof CriarUsuarioDto, value: string) => {
     setForm((prev) => ({
@@ -59,6 +60,19 @@ export function ModalCadastrarUsuario({
 
   const handleSubmit = async () => {
     setLoading(true);
+
+    if (codigoPendente.trim() !== "") {
+      addToast({
+        title: "Código não adicionado",
+        description:
+          "Você digitou um código de fabricante, mas não pressionou Enter para adicioná-lo.",
+        color: "warning",
+      });
+      setLoading(false);
+
+      return;
+    }
+
     try {
       await criarUsuario(form);
       onClose();
@@ -130,6 +144,7 @@ export function ModalCadastrarUsuario({
                   placeholder="Digite e pressione enter"
                   value={form.codigoInterno || ""}
                   onChange={(value) => handleChange("codigoInterno", value)}
+                  onInputValueChange={(input) => setCodigoPendente(input)}
                 />
                 <Select
                   label="Tipo de usuário"

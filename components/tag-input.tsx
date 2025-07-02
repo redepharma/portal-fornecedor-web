@@ -9,6 +9,7 @@ interface TagInputProps {
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
+  onInputValueChange?: (input: string) => void;
 }
 
 export function TagInput({
@@ -16,6 +17,7 @@ export function TagInput({
   placeholder,
   value,
   onChange,
+  onInputValueChange,
 }: TagInputProps) {
   const [tags, setTags] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -61,6 +63,7 @@ export function TagInput({
     const apenasNumeros = value.replace(/[^\d]/g, "");
 
     setInputValue(apenasNumeros);
+    onInputValueChange?.(apenasNumeros);
   };
 
   return (

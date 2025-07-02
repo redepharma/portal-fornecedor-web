@@ -39,6 +39,7 @@ export function ModalEditarUsuario({
     roles: "fornecedor",
   });
   const [loading, setLoading] = useState(false);
+  const [codigoPendente, setCodigoPendente] = useState("");
 
   const abrirModal = () => {
     setForm({
@@ -59,6 +60,19 @@ export function ModalEditarUsuario({
 
   const handleSubmit = async () => {
     setLoading(true);
+
+    if (codigoPendente.trim() !== "") {
+      addToast({
+        title: "Código não adicionado",
+        description:
+          "Você digitou um código de fabricante, mas não pressionou Enter para adicioná-lo.",
+        color: "warning",
+      });
+      setLoading(false);
+
+      return;
+    }
+
     try {
       await atualizarUsuario(usuario.id, form);
       onClose();
@@ -116,6 +130,7 @@ export function ModalEditarUsuario({
                   placeholder="Digite e pressione enter"
                   value={form.codigoInterno || ""}
                   onChange={(value) => handleChange("codigoInterno", value)}
+                  onInputValueChange={(input) => setCodigoPendente(input)}
                 />
                 <Select
                   label="Tipo de usuário"
