@@ -1,6 +1,7 @@
 import { apiClient } from "../../api/api.client";
 
 import { CriarUsuarioDto } from "./types/criarUsuario.dto";
+import { RedefinirSenhaDto } from "./types/redefinirSenha.dto";
 import { UpdateUsuarioDto } from "./types/updateUsuario.dto";
 import { IUsuario } from "./types/usuario.interface";
 
@@ -23,6 +24,15 @@ export const atualizarUsuario = async (
   usuario: UpdateUsuarioDto
 ): Promise<IUsuario> => {
   const { data } = await apiClient.patch(`/users/${id}`, usuario);
+
+  return data;
+};
+
+export const alterarSenhaUsuario = async (
+  id: number,
+  senha: string
+): Promise<IUsuario> => {
+  const { data } = await apiClient.patch(`/users/${id}/senha`, { senha });
 
   return data;
 };

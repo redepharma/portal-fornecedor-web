@@ -14,6 +14,7 @@ import { Trash2 } from "lucide-react";
 
 import { IUsuario } from "@/modules/fornecedor/usuarios/types/usuario.interface";
 import { ModalEditarUsuario } from "@/modules/fornecedor/usuarios/componentes/modalEditarusuario";
+import { ModalRedefinirSenha } from "./modalRedefinirSenha";
 
 interface UsuarioTableProps {
   usuarios: IUsuario[];
@@ -63,6 +64,12 @@ export function UsuarioTable({
                   />
                 </span>
               </Tooltip>
+              <Tooltip showArrow content="Trocar senha" delay={300} radius="sm">
+                <span>
+                  <ModalRedefinirSenha usuario={usuario} />
+                </span>
+              </Tooltip>
+
               <Tooltip
                 showArrow
                 content="Excluir usuário"
