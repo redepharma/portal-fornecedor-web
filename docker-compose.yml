@@ -13,11 +13,11 @@ services:
       - app-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.web-portal-fornecedor.rule=Host(`webportalfornecedor.nelfarma.dev.br`)"
-      - "traefik.http.routers.web-portal-fornecedor.entrypoints=websecure"
-      - "traefik.http.routers.web-portal-fornecedor.tls.certresolver=cloudflare"
-      - "traefik.http.services.web-portal-fornecedor.loadbalancer.server.port=3000"
-      - "traefik.http.routers.web-portal-fornecedor.middlewares=headers-seguranca"
+      - "traefik.http.routers.fornecedor.rule=Host(`fornecedor.nelfarma.dev.br`)"
+      - "traefik.http.routers.fornecedor.entrypoints=websecure"
+      - "traefik.http.routers.fornecedor.tls.certresolver=cloudflare"
+      - "traefik.http.services.fornecedor.loadbalancer.server.port=3000"
+      - "traefik.http.routers.fornecedor.middlewares=headers-seguranca"
 
 networks:
   traefik:
