@@ -1,9 +1,10 @@
 import axios from "axios";
 
 import { getToken, triggerLogoutRedirect } from "@/services/auth.service";
+import { getApiBaseUrl } from "@/shared/utils";
 
 export const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3004",
+  baseURL: getApiBaseUrl(),
   timeout: 60000,
 });
 
