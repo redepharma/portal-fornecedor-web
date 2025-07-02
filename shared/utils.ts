@@ -3,7 +3,7 @@ export function getApiBaseUrl(): string {
     const hostname = window.location.hostname;
 
     if (hostname.startsWith("10.7.0.116")) {
-      return process.env.NEXT_PUBLIC_API_BASE_URL || "http://10.7.0.116:3004";
+      return process.env.NEXT_PUBLIC_API_BASE_URL || "http://10.7.0.116:3000";
     }
 
     if (hostname === "fornecedor.nelfarma.dev.br") {
@@ -19,6 +19,6 @@ export function getApiBaseUrl(): string {
   }
 
   return process.env.NODE_ENV === "production"
-    ? "http://10.7.0.116:3004"
-    : "http://localhost:3004";
+    ? "http://10.7.0.116:3000"
+    : "http://localhost:3000";
 }
