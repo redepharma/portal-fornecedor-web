@@ -40,7 +40,9 @@ export function TagInput({
       setTags(novas);
       onChange(novas.join(", "));
     }
+
     setInputValue("");
+    onInputValueChange?.("");
   };
 
   const removerTag = (tag: string) => {

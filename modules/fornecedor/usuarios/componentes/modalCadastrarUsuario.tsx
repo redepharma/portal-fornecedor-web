@@ -55,6 +55,7 @@ export function ModalCadastrarUsuario({
       codigoInterno: "",
       roles: "fornecedor",
     });
+    setCodigoPendente("");
     onOpen();
   };
 
