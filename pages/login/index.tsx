@@ -16,6 +16,11 @@ import { CircleX, Eye, EyeOff, LogIn } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { Head } from "@/layouts/head";
 
+/**
+ * Página de login do sistema.
+ * Permite que o usuário informe nome e senha para autenticação.
+ * Exibe feedbacks via toasts para sucesso, erros e validações.
+ */
 export default function LoginPage() {
   const { login, status } = useAuth();
   const router = useRouter();
@@ -25,15 +30,17 @@ export default function LoginPage() {
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  /**
+   * Executa o processo de login chamando o hook de autenticação,
+   * com validação básica de campos e feedback ao usuário.
+   */
   const handleLogin = async () => {
-    // ⚠️ Validação básica
     if (!username.trim() || !senha.trim()) {
       addToast({
         title: "Campos obrigatórios",
         description: "Informe seu usuário e senha para continuar.",
         color: "danger",
       });
-
       return;
     }
 

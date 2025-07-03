@@ -24,6 +24,10 @@ import { TabelaEstoquePorLoja } from "@/modules/fornecedor/estoque/components/ta
 import { IEstoqueAgrupado } from "@/modules/fornecedor/estoque/types/estoqueAgrupado.interface";
 import { EstoqueService } from "@/modules/fornecedor/estoque/estoque.service";
 
+/**
+ * Componente de exibição e consulta de estoque filtrado por fabricantes,
+ * com visualização em abas por produto e por loja.
+ */
 function FornecedorEstoque() {
   const { user } = useAuth();
   const [fabricantes, setFabricantes] = useState<IFabricante[]>([]);

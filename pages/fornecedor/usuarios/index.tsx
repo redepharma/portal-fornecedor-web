@@ -14,6 +14,9 @@ import { ModalCadastrarUsuario } from "@/modules/fornecedor/usuarios/componentes
 import { UsuarioTable } from "@/modules/fornecedor/usuarios/componentes/tabelaUsuarios";
 import { withRoleProtection } from "@/hoc/withRoleProtection";
 
+/**
+ * Página para gerenciar usuários, com listagem, filtro, paginação, cadastro e exclusão.
+ */
 function GerenciarUsuariosPage() {
   const [usuarios, setUsuarios] = useState<IUsuario[]>([]);
   const [carregando, setCarregando] = useState(true);

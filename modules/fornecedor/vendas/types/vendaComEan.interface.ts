@@ -1,3 +1,6 @@
+/**
+ * Interface que representa uma venda com detalhes e EAN do produto.
+ */
 export interface IVendaComEAN {
   CD_PROD: number;
   DS_PROD: string;

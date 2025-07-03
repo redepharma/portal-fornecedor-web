@@ -1,3 +1,6 @@
+/**
+ * Interface que representa o estoque agrupado por produto e filial.
+ */
 export interface IEstoqueAgrupado {
   cdProd: number;
   cdFilial: number;

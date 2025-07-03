@@ -1,3 +1,6 @@
+/**
+ * Interface que representa venda agrupada por filial e produto.
+ */
 export interface IVendaPorFilial {
   CD_FILIAL: number;
   CD_PROD: number;

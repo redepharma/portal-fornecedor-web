@@ -10,6 +10,10 @@ import { fontSans, fontMono } from "@/config/fonts";
 import "@/styles/globals.css";
 import { AuthProvider } from "@/contexts/auth.context";
 
+/**
+ * Componente principal que envolve toda a aplicação Next.js.
+ * Aplica providers para UI, temas, autenticação, i18n e notificações.
+ */
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
@@ -27,6 +31,9 @@ export default function App({ Component, pageProps }: AppProps) {
   );
 }
 
+/**
+ * Fontes globais definidas para uso em CSS e componentes.
+ */
 export const fonts = {
   sans: fontSans.style.fontFamily,
   mono: fontMono.style.fontFamily,

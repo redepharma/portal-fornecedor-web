@@ -12,6 +12,15 @@ interface TagInputProps {
   onInputValueChange?: (input: string) => void;
 }
 
+/**
+ * Componente de input para entrada de múltiplas tags numéricas.
+ *
+ * Permite digitar números, adicioná-los ao apertar Enter ou vírgula,
+ * exibe as tags em formato visual, com opção de remover individualmente.
+ *
+ * @param {TagInputProps} props - Propriedades do componente.
+ * @returns {JSX.Element} Input controlado para múltiplas tags numéricas.
+ */
 export function TagInput({
   label,
   placeholder,

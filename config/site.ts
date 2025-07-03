@@ -1,5 +1,14 @@
+/**
+ * Tipo inferido para a configuração do site.
+ */
 export type SiteConfig = typeof siteConfig;
 
+/**
+ * Objeto de configuração do Portal do Fornecedor Redepharma.
+ *
+ * Contém nome, descrição, itens de navegação principal, itens do menu
+ * e links externos para redes sociais e recursos.
+ */
 export const siteConfig = {
   name: "Portal do fornecedor - Redepharma",
   description:

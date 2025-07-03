@@ -1,5 +1,10 @@
 import { tv } from "tailwind-variants";
 
+/**
+ * Variantes estilizadas para títulos com suporte a cores, tamanhos e largura total.
+ *
+ * Permite aplicar gradientes de cor, tamanhos responsivos e layout full width.
+ */
 export const title = tv({
   base: "tracking-tight inline font-semibold",
   variants: {
@@ -40,6 +45,11 @@ export const title = tv({
   ],
 });
 
+/**
+ * Variantes estilizadas para subtítulos, com opção full width.
+ *
+ * Aplica tamanho e cor padrão, com responsividade e layout fluido.
+ */
 export const subtitle = tv({
   base: "w-full md:w-1/2 my-2 text-lg lg:text-xl text-default-600 block max-w-full",
   variants: {

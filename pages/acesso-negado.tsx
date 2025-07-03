@@ -4,6 +4,10 @@ import { AlertCircle } from "lucide-react";
 import { Button, Card, CardBody, CardHeader } from "@heroui/react";
 import { useRouter } from "next/router";
 
+/**
+ * Página exibida quando o usuário tenta acessar uma rota sem permissão.
+ * Informa sobre o acesso negado e oferece botão para voltar ao início.
+ */
 export default function AcessoNegadoPage() {
   const router = useRouter();
 

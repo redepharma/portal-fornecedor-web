@@ -1,18 +1,7 @@
+/* eslint-disable prettier/prettier */
 "use client";
 
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Button,
-  Input,
-  Select,
-  SelectItem,
-  useDisclosure,
-  addToast,
-} from "@heroui/react";
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Button, Input, Select, SelectItem, useDisclosure, addToast } from "@heroui/react";
 import { useState } from "react";
 import { CircleX, Pencil } from "lucide-react";
 
@@ -24,13 +13,19 @@ import { TagInput } from "@/components/tag-input";
 
 const tiposUsuario = ["Fornecedor", "Comprador"];
 
-export function ModalEditarUsuario({
-  usuario,
-  aoFechar,
-}: {
-  usuario: IUsuario;
-  aoFechar: () => void;
-}) {
+/**
+ * Componente modal para edição dos dados de um usuário existente.
+ *
+ * Controla formulário com campos de nome, username, códigos do fabricante (tags)
+ * e tipo de usuário. Gerencia envio, exibe toasts de sucesso e erro,
+ * e carrega dados do usuário ao abrir.
+ *
+ * @param {Object} props - Propriedades do componente.
+ * @param {IUsuario} props.usuario - Usuário a ser editado.
+ * @param {() => void} props.aoFechar - Callback executado após fechamento do modal.
+ * @returns {JSX.Element} Modal para edição do usuário.
+ */
+export function ModalEditarUsuario({ usuario, aoFechar }: { usuario: IUsuario; aoFechar: () => void }) {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [form, setForm] = useState<UpdateUsuarioDto>({
     nome: "",

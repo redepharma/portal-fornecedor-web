@@ -11,6 +11,16 @@ export interface ThemeSwitchProps {
   classNames?: SwitchProps["classNames"];
 }
 
+/**
+ * Componente switch para alternar entre tema claro e escuro.
+ *
+ * Utiliza hook do Next Themes para gerenciar o tema atual,
+ * exibindo ícone de Sol ou Lua conforme o tema.
+ * Prevê correção de problema de hidratação (SSR).
+ *
+ * @param {ThemeSwitchProps} props - Propriedades do componente.
+ * @returns {JSX.Element} Switch para alternar temas do site.
+ */
 export const ThemeSwitch: FC<ThemeSwitchProps> = ({
   className,
   classNames,

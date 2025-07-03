@@ -1,3 +1,7 @@
+/**
+ * Retorna a URL base da API conforme o ambiente e hostname.
+ * @returns A URL base para chamadas à API.
+ */
 export function getApiBaseUrl(): string {
   if (typeof window !== "undefined") {
     const hostname = window.location.hostname;

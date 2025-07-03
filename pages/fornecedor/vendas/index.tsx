@@ -1,7 +1,5 @@
 "use client";
 
-import type { Selection } from "@heroui/react";
-
 import { useEffect, useState } from "react";
 import {
   addToast,
@@ -17,19 +15,26 @@ import { DateValue } from "@internationalized/date";
 import { Select, SelectItem } from "@heroui/react";
 import { Eraser, Search } from "lucide-react";
 
-import { VendaService } from "@/modules/fornecedor/vendas/vendas.service";
-import { withRoleProtection } from "@/hoc/withRoleProtection";
 import DefaultLayout from "@/layouts/default";
-import { IFabricante } from "@/modules/fornecedor/types/fabricante.interface";
 import { FornecedorService } from "@/modules/fornecedor/fornecedor.service";
-import { IVendaComEAN } from "@/modules/fornecedor/vendas/types/vendaComEan.interface";
+import { VendaService } from "@/modules/fornecedor/vendas/vendas.service";
 import { useAuth } from "@/hooks/use-auth";
-import { TabelaVendasPorProduto } from "@/modules/fornecedor/vendas/components/tabelaVendasPorProduto";
-import { TabelaVendasPorLoja } from "@/modules/fornecedor/vendas/components/tabelaVendasPorLoja";
+import { withRoleProtection } from "@/hoc/withRoleProtection";
+
+import { IFabricante } from "@/modules/fornecedor/types/fabricante.interface";
+import { IVendaComEAN } from "@/modules/fornecedor/vendas/types/vendaComEan.interface";
 import { IVendaPorFilial } from "@/modules/fornecedor/vendas/types/vendaPorLoja.interface";
 
+import { TabelaVendasPorProduto } from "@/modules/fornecedor/vendas/components/tabelaVendasPorProduto";
+import { TabelaVendasPorLoja } from "@/modules/fornecedor/vendas/components/tabelaVendasPorLoja";
+
+/**
+ * Componente principal para consulta e exibição de vendas agrupadas por produto e por loja,
+ * com seleção de fabricantes e intervalo de datas.
+ */
 function FornecedorVendas() {
   const { user } = useAuth();
+
   const [fabricantes, setFabricantes] = useState<IFabricante[]>([]);
   const [selecionados, setSelecionados] = useState<Selection>(new Set([]));
   const [dataRange, setDataRange] = useState<{
@@ -55,6 +60,10 @@ function FornecedorVendas() {
     FornecedorService.listarFabricantes(codigos).then(setFabricantes);
   }, [user?.codigoInterno]);
 
+  /**
+   * Executa a busca das vendas com base nos fabricantes selecionados e no intervalo de datas.
+   * Valida período antes da consulta e exibe notificações para sucesso ou erro.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -126,6 +135,10 @@ function FornecedorVendas() {
     }
   };
 
+  /**
+   * Reseta os filtros de fabricantes selecionados e período de data,
+   * limpa as vendas exibidas e exibe uma notificação.
+   */
   const handleLimparFiltros = () => {
     setSelecionados(new Set([]));
     setDataRange(null);

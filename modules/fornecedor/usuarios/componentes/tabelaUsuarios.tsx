@@ -22,11 +22,14 @@ interface UsuarioTableProps {
   onAtualizar: () => void;
 }
 
-export function UsuarioTable({
-  usuarios,
-  onExcluir,
-  onAtualizar,
-}: UsuarioTableProps) {
+/**
+ * Componente que exibe uma tabela de usuários com opções para editar,
+ * redefinir senha e excluir.
+ *
+ * @param {UsuarioTableProps} props - Propriedades do componente.
+ * @returns {JSX.Element} Tabela de usuários com ações.
+ */
+export function UsuarioTable({ usuarios, onExcluir, onAtualizar }: UsuarioTableProps) {
   return (
     <Table
       isHeaderSticky

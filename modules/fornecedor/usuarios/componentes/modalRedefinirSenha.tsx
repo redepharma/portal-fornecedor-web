@@ -18,6 +18,15 @@ import { KeyRound, CircleX, Eye, EyeOff } from "lucide-react";
 import { alterarSenhaUsuario } from "../usuarios.service";
 import { IUsuario } from "../types/usuario.interface";
 
+/**
+ * Componente modal para redefinição de senha do usuário.
+ *
+ * Controla estado da nova senha, visibilidade do input,
+ * valida tamanho mínimo, gerencia envio e exibe toasts para sucesso ou erro.
+ *
+ * @param {{ usuario: IUsuario }} props - Propriedades do componente.
+ * @returns {JSX.Element} Modal para alterar senha do usuário.
+ */
 export function ModalRedefinirSenha({ usuario }: { usuario: IUsuario }) {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [senha, setSenha] = useState("");
@@ -87,18 +96,8 @@ export function ModalRedefinirSenha({ usuario }: { usuario: IUsuario }) {
                   endContent={
                     <div className="flex items-center gap-1">
                       {senha && (
-                        <Tooltip
-                          showArrow
-                          content="Limpar senha"
-                          delay={200}
-                          radius="sm"
-                        >
-                          <CircleX
-                            className="cursor-pointer"
-                            color="#5e5c64"
-                            size={16}
-                            onClick={() => setSenha("")}
-                          />
+                        <Tooltip showArrow content="Limpar senha" delay={200} radius="sm">
+                          <CircleX className="cursor-pointer" color="#5e5c64" size={16} onClick={() => setSenha("")} />
                         </Tooltip>
                       )}
                       {mostrarSenha ? (

@@ -1,6 +1,10 @@
 import DefaultLayout from "@/layouts/default";
 import { useAuth } from "@/hooks/use-auth";
 
+/**
+ * Página inicial do Portal do Fornecedor.
+ * Exibe mensagem de boas-vindas e descrição das principais funcionalidades para o usuário autenticado.
+ */
 export default function IndexPage() {
   const { user } = useAuth();
 

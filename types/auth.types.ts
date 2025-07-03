@@ -1,5 +1,11 @@
+/**
+ * Tipos de papéis que um usuário pode ter no sistema.
+ */
 export type Role = "admin" | "comprador" | "ti" | "fornecedor";
 
+/**
+ * Representa os dados do usuário autenticado.
+ */
 export interface AuthUser {
   id: number;
   nome: string;
@@ -9,6 +15,9 @@ export interface AuthUser {
   origin?: "local" | "hub";
 }
 
+/**
+ * Dados e métodos expostos pelo contexto de autenticação.
+ */
 export interface AuthContextData {
   user: AuthUser | null;
   status: "loading" | "authenticated" | "unauthenticated";

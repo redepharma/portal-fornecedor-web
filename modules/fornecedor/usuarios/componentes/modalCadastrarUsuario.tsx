@@ -23,12 +23,18 @@ import { TagInput } from "@/components/tag-input";
 
 const tiposUsuario = ["Fornecedor", "Comprador"];
 
-export function ModalCadastrarUsuario({
-  aoFechar,
-}: {
-  aoFechar: () => void;
-  aberto: boolean;
-}) {
+/**
+ * Componente modal para cadastro de um novo usuário.
+ *
+ * Contém formulário controlado com campos de nome, username, senha,
+ * códigos do fabricante (tags) e tipo de usuário.
+ * Controla envio, exibe toasts para sucesso e erro, e reseta formulário ao abrir.
+ *
+ * @param {Object} props - Propriedades do componente.
+ * @param {() => void} props.aoFechar - Função callback chamada após o fechamento do modal.
+ * @returns {JSX.Element} Modal com formulário para cadastrar usuário.
+ */
+export function ModalCadastrarUsuario({ aoFechar }: { aoFechar: () => void; aberto: boolean }) {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [form, setForm] = useState<CriarUsuarioDto>({
     nome: "",

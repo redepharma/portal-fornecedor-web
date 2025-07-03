@@ -27,14 +27,15 @@ interface Props {
   codigosFabricantes?: string[];
 }
 
-export function TabelaEstoquePorProduto({
-  estoque,
-  pagina,
-  porPagina,
-  setPagina,
-  loading,
-  codigosFabricantes = [],
-}: Props) {
+/**
+ * Componente que exibe uma tabela paginada e filtrável do estoque agrupado por produto.
+ *
+ * Permite ordenação por colunas, filtro por texto (descrição ou EAN) e exportação para Excel.
+ *
+ * @param {Props} props - Propriedades do componente.
+ * @returns {JSX.Element} Tabela com controle de paginação, filtro e exportação.
+ */
+export function TabelaEstoquePorProduto({ estoque, pagina, porPagina, setPagina, loading, codigosFabricantes = [] }: Props) {
   const [filtro, setFiltro] = useState("");
   const [ordenacao, setOrdenacao] = useState<{
     coluna: keyof IEstoqueAgrupado | null;
@@ -63,11 +64,7 @@ export function TabelaEstoquePorProduto({
   const dadosFiltrados = useMemo(() => {
     const termo = filtro.toLowerCase();
 
-    const filtrados = estoque.filter(
-      (item) =>
-        item.dsProd?.toLowerCase().includes(termo) ||
-        item.ean01?.toLowerCase().includes(termo)
-    );
+    const filtrados = estoque.filter((item) => item.dsProd?.toLowerCase().includes(termo) || item.ean01?.toLowerCase().includes(termo));
 
     if (!ordenacao.coluna) return filtrados;
 

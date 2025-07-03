@@ -1,3 +1,6 @@
+/**
+ * Interface que representa os dados de estoque.
+ */
 export interface IEstoque {
   CD_PROD: number;
   CD_FILIAL: number;

@@ -20,6 +20,9 @@ import { VendaService } from "../vendas.service";
 
 import { IVendaComEAN } from "@/modules/fornecedor/vendas/types/vendaComEan.interface";
 
+/**
+ * Propriedades do componente TabelaVendasPorProduto.
+ */
 interface TabelaVendasProps {
   vendas: IVendaComEAN[];
   pagina: number;
@@ -31,6 +34,10 @@ interface TabelaVendasProps {
   dataFim?: string;
 }
 
+/**
+ * Componente que exibe tabela paginada, ordenável e filtrável
+ * das vendas por produto, com opção de exportar Excel.
+ */
 export function TabelaVendasPorProduto({
   vendas,
   pagina,

@@ -6,10 +6,22 @@ import { createContext, useEffect, useState, type ReactNode } from "react";
 import { AuthUser, AuthContextData } from "@/types/auth.types";
 import * as AuthService from "@/services/auth.service";
 
-export const AuthContext = createContext<AuthContextData | undefined>(
-  undefined
-);
+/**
+ * Contexto React para informações e ações de autenticação.
+ *
+ * Fornece estado do usuário, status da autenticação e métodos para login/logout.
+ */
+export const AuthContext = createContext<AuthContextData | undefined>(undefined);
 
+/**
+ * Provedor de contexto para autenticação do usuário.
+ *
+ * Inicializa estado do usuário, escuta logout forçado pela API,
+ * gerencia login, logout e perfil do usuário.
+ *
+ * @param {{ children: ReactNode }} props - Conteúdo filho que receberá o contexto.
+ * @returns {JSX.Element} Provedor de contexto de autenticação.
+ */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [status, setStatus] = useState<AuthContextData["status"]>("loading");
@@ -53,9 +65,5 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setStatus("unauthenticated");
   };
 
-  return (
-    <AuthContext.Provider value={{ user, status, login, logout, setUser }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, status, login, logout, setUser }}>{children}</AuthContext.Provider>;
 }

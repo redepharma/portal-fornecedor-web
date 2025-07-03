@@ -1,15 +1,21 @@
+
 "use client";
 
 import { Home, LogOut, Package, BadgeDollarSign } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Divider } from "@heroui/react";
-
 import { NavItem } from "./navItem";
-
 import { useAuth } from "@/hooks/use-auth";
 import { logout } from "@/services/auth.service";
-import { Role } from "@/types/auth.types";
 
+/**
+ * Componente Sidebar lateral do Portal do Fornecedor.
+ *
+ * Exibe o logo, nome do usuário, links de navegação e botão de logout.
+ * Ajusta opções visíveis conforme o papel do usuário (ex: admin).
+ *
+ * @returns {JSX.Element} Barra lateral com navegação e controle de sessão.
+ */
 export function Sidebar() {
   const { user, setUser } = useAuth();
   const pathname = usePathname();
@@ -30,35 +36,20 @@ export function Sidebar() {
         <NavItem currentPath={pathname} href="/" icon={<Home size={18} />}>
           Início
         </NavItem>
-        <NavItem
-          currentPath={pathname}
-          href="/fornecedor/vendas"
-          icon={<BadgeDollarSign size={18} />}
-        >
+        <NavItem currentPath={pathname} href="/fornecedor/vendas" icon={<BadgeDollarSign size={18} />}>
           Vendas
         </NavItem>
-        <NavItem
-          currentPath={pathname}
-          href="/fornecedor/estoque"
-          icon={<Package size={18} />}
-        >
+        <NavItem currentPath={pathname} href="/fornecedor/estoque" icon={<Package size={18} />}>
           Estoque
         </NavItem>
         {user?.roles?.includes("admin") && (
-          <NavItem
-            currentPath={pathname}
-            href="/fornecedor/usuarios"
-            icon={<Package size={18} />}
-          >
+          <NavItem currentPath={pathname} href="/fornecedor/usuarios" icon={<Package size={18} />}>
             Usuários
           </NavItem>
         )}
       </div>
 
-      <button
-        className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-red-600 hover:bg-red-100 transition"
-        onClick={handleLogout}
-      >
+      <button className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-red-600 hover:bg-red-100 transition" onClick={handleLogout}>
         <LogOut size={18} />
         Sair
       </button>

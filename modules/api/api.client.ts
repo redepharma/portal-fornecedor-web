@@ -3,12 +3,18 @@ import axios from "axios";
 import { getToken, triggerLogoutRedirect } from "@/services/auth.service";
 import { getApiBaseUrl } from "@/shared/utils";
 
+/**
+ * Instância do cliente HTTP Axios configurada para comunicação com a API.
+ *
+ * Aplica baseURL dinâmica, timeout e interceptadores para incluir token
+ * e tratar respostas 401 com logout automático.
+ */
 export const apiClient = axios.create({
   baseURL: getApiBaseUrl(),
   timeout: 60000,
 });
 
-// Token automático
+// Interceptor para adicionar token Bearer e headers apropriados nas requisições
 apiClient.interceptors.request.use((config) => {
   const token = getToken();
 
@@ -25,7 +31,7 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-// Redirecionamento centralizado
+// Interceptor para tratar respostas, disparando logout se status 401
 apiClient.interceptors.response.use(
   (res) => res,
   (error) => {

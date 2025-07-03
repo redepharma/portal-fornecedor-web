@@ -3,6 +3,13 @@ import NextHead from "next/head";
 
 import { siteConfig } from "@/config/site";
 
+/**
+ * Componente para definir tags <head> da página, como título e meta tags.
+ *
+ * Utiliza dados da configuração do site para título, descrição e favicon.
+ *
+ * @returns {JSX.Element} Elemento Next.js Head configurado para SEO e responsividade.
+ */
 export const Head = () => {
   return (
     <NextHead>

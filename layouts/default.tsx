@@ -2,6 +2,12 @@ import { Head } from "./head";
 
 import { Sidebar } from "@/components/sidebar";
 
+/**
+ * Layout padrão da aplicação, com sidebar fixa e área principal de conteúdo.
+ *
+ * @param {{ children: React.ReactNode }} props - Conteúdo interno exibido no layout.
+ * @returns {JSX.Element} Layout com sidebar e conteúdo principal.
+ */
 export default function DefaultLayout({
   children,
 }: {

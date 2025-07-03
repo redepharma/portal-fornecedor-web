@@ -4,6 +4,10 @@ import { Ghost } from "lucide-react";
 import { Button, Card, CardBody, CardHeader } from "@heroui/react";
 import { useRouter } from "next/router";
 
+/**
+ * Página exibida quando a rota não é encontrada (404).
+ * Exibe mensagem amigável e botão para voltar à página inicial.
+ */
 export default function NotFoundPage() {
   const router = useRouter();
 

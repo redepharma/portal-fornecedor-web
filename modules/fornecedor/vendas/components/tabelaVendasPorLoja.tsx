@@ -32,16 +32,14 @@ interface Props {
   dataFim?: string;
 }
 
-export function TabelaVendasPorLoja({
-  vendas,
-  pagina,
-  porPagina,
-  setPagina,
-  loading,
-  codigosFabricantes = [],
-  dataInicio,
-  dataFim,
-}: Props) {
+/**
+ * Componente que exibe a tabela de vendas por loja com paginação,
+ * ordenação, filtro e opção de exportação em Excel.
+ *
+ * @param {Props} props - Propriedades do componente.
+ * @returns {JSX.Element} Tabela de vendas paginada e filtrável.
+ */
+export function TabelaVendasPorLoja({ vendas, pagina, porPagina, setPagina, loading, codigosFabricantes = [], dataInicio, dataFim }: Props) {
   const [baixandoExcel, setBaixandoExcel] = useState(false);
   const [filtro, setFiltro] = useState("");
   const [ordenacao, setOrdenacao] = useState<{
