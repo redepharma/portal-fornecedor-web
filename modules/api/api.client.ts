@@ -11,7 +11,7 @@ import { getApiBaseUrl } from "@/shared/utils";
  */
 export const apiClient = axios.create({
   baseURL: getApiBaseUrl(),
-  timeout: 60000,
+  timeout: 300000,
 });
 
 // Interceptor para adicionar token Bearer e headers apropriados nas requisições
