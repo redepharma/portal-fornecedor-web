@@ -14,17 +14,16 @@ import {
 import { DateValue } from "@internationalized/date";
 import { Select, SelectItem } from "@heroui/react";
 import { Eraser, Search } from "lucide-react";
+import type { Selection } from "@heroui/react";
 
 import DefaultLayout from "@/layouts/default";
 import { FornecedorService } from "@/modules/fornecedor/fornecedor.service";
 import { VendaService } from "@/modules/fornecedor/vendas/vendas.service";
 import { useAuth } from "@/hooks/use-auth";
 import { withRoleProtection } from "@/hoc/withRoleProtection";
-
 import { IFabricante } from "@/modules/fornecedor/types/fabricante.interface";
 import { IVendaComEAN } from "@/modules/fornecedor/vendas/types/vendaComEan.interface";
 import { IVendaPorFilial } from "@/modules/fornecedor/vendas/types/vendaPorLoja.interface";
-
 import { TabelaVendasPorProduto } from "@/modules/fornecedor/vendas/components/tabelaVendasPorProduto";
 import { TabelaVendasPorLoja } from "@/modules/fornecedor/vendas/components/tabelaVendasPorLoja";
 
