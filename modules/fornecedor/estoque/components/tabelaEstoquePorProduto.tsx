@@ -35,7 +35,14 @@ interface Props {
  * @param {Props} props - Propriedades do componente.
  * @returns {JSX.Element} Tabela com controle de paginação, filtro e exportação.
  */
-export function TabelaEstoquePorProduto({ estoque, pagina, porPagina, setPagina, loading, codigosFabricantes = [] }: Props) {
+export function TabelaEstoquePorProduto({
+  estoque,
+  pagina,
+  porPagina,
+  setPagina,
+  loading,
+  codigosFabricantes = [],
+}: Props) {
   const [filtro, setFiltro] = useState("");
   const [ordenacao, setOrdenacao] = useState<{
     coluna: keyof IEstoqueAgrupado | null;
@@ -64,7 +71,11 @@ export function TabelaEstoquePorProduto({ estoque, pagina, porPagina, setPagina,
   const dadosFiltrados = useMemo(() => {
     const termo = filtro.toLowerCase();
 
-    const filtrados = estoque.filter((item) => item.dsProd?.toLowerCase().includes(termo) || item.ean01?.toLowerCase().includes(termo));
+    const filtrados = estoque.filter(
+      (item) =>
+        item.dsProd?.toLowerCase().includes(termo) ||
+        item.ean01?.toLowerCase().includes(termo)
+    );
 
     if (!ordenacao.coluna) return filtrados;
 
@@ -102,16 +113,6 @@ export function TabelaEstoquePorProduto({ estoque, pagina, porPagina, setPagina,
             value={filtro}
             onChange={(e) => setFiltro(e.target.value)}
           />
-          <Button
-            className="max-w-fit w-full"
-            color="primary"
-            isDisabled={estoque.length === 0}
-            size="sm"
-            startContent={<ArrowDownToLine size={14} />}
-            onPress={handleExportar}
-          >
-            Baixar Excel
-          </Button>
         </div>
       </div>
 
