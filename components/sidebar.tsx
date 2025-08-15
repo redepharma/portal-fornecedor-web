@@ -41,7 +41,7 @@ export function Sidebar() {
           items={[
             {
               href: "/compras/pedidos",
-              label: "Pedidos",
+              label: "Enviar pedidos",
             },
             {
               href: "/compras/status-pedidos",
