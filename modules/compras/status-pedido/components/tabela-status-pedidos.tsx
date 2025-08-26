@@ -161,14 +161,21 @@ export function TabelaStatusPedidos({
             className="text-center"
             onClick={() => handleOrdenar("seqPedido")}
           >
-            SEQPEDIDO
+            Nº Pedido fornecedor
           </TableColumn>
           <TableColumn
             allowsSorting
             className="text-center"
-            onClick={() => handleOrdenar("nroPedVenda")}
+            onClick={() => handleOrdenar("codigoPedido")}
           >
-            Nº PEDIDO DA VENDA
+            Cód. Pedido interno
+          </TableColumn>
+          <TableColumn
+            allowsSorting
+            className="text-center"
+            onClick={() => handleOrdenar("codigoFornecedor")}
+          >
+            Cód. Fornecedor
           </TableColumn>
           <TableColumn
             allowsSorting
@@ -177,13 +184,6 @@ export function TabelaStatusPedidos({
           >
             STATUS INTEGRAÇÃO
           </TableColumn>
-          <TableColumn
-            allowsSorting
-            className="text-center"
-            onClick={() => handleOrdenar("nroEmpresa")}
-          >
-            EMPRESA
-          </TableColumn>
         </TableHeader>
 
         <TableBody
@@ -191,20 +191,17 @@ export function TabelaStatusPedidos({
           items={paginados}
         >
           {(pedido) => (
-            <TableRow
-              key={
-                pedido?.seqPedido ??
-                `${pedido?.idPedidoCanalVenda}-${pedido?.nroEmpresa}`
-              }
-            >
+            <TableRow key={pedido?.seqPedido}>
               <TableCell className="text-center">{pedido.seqPedido}</TableCell>
               <TableCell className="text-center">
-                {pedido.nroPedVenda ?? "-"}
+                {pedido.codigoPedido ?? "-"}
+              </TableCell>
+              <TableCell className="text-center">
+                {pedido.codigoFornecedor ?? "-"}
               </TableCell>
               <TableCell className="text-center">
                 {pedido.statusIntegracao}
               </TableCell>
-              <TableCell className="text-center">{pedido.nroEmpresa}</TableCell>
             </TableRow>
           )}
         </TableBody>
