@@ -12,9 +12,10 @@ import {
   Button,
   Input,
   Divider,
+  Chip,
 } from "@heroui/react";
 import { useMemo, useState, useEffect } from "react";
-import { RotateCw, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
 import { IStatusPedidoMultigiro } from "../types/status-pedido.interface";
 
@@ -48,7 +49,6 @@ export function TabelaStatusPedidos({
     direcao: "asc",
   });
 
-  // sempre que filtrar, volta pra página 1
   useEffect(() => {
     setPagina(1);
   }, [filtro, setPagina]);
@@ -70,8 +70,8 @@ export function TabelaStatusPedidos({
     return dados.filter((d) => {
       const campos = [
         d.seqPedido,
-        d.nroPedVenda,
-        d.nroEmpresa,
+        d.codigoPedido,
+        d.codigoFornecedor,
         d.statusIntegracao,
         d.idPedidoCanalVenda,
       ];
@@ -85,23 +85,37 @@ export function TabelaStatusPedidos({
   }, [dados, filtro]);
 
   const dadosOrdenados = useMemo(() => {
-    if (!ordenacao.coluna) return dadosFiltrados;
     const { coluna, direcao } = ordenacao;
 
-    return [...dadosFiltrados].sort((a, b) => {
-      const av = a[coluna!];
-      const bv = b[coluna!];
+    const getPriority = (s?: string) => (s === "Rejeitado" ? 0 : 1);
 
-      // números
-      if (typeof av === "number" && typeof bv === "number") {
-        return direcao === "asc" ? av - bv : bv - av;
+    const cmpBase = (a: IStatusPedidoMultigiro, b: IStatusPedidoMultigiro) => {
+      // 1) prioridade: Rejeitado sempre vem antes
+      const pa = getPriority(a.statusIntegracao);
+      const pb = getPriority(b.statusIntegracao);
+
+      if (pa !== pb) return pa - pb;
+
+      // 2) ordenação escolhida (se houver)
+      if (!coluna) return 0;
+
+      const av = a[coluna];
+      const bv = b[coluna];
+
+      const aNum = typeof av === "number" ? av : Number.NaN;
+      const bNum = typeof bv === "number" ? bv : Number.NaN;
+
+      if (!Number.isNaN(aNum) && !Number.isNaN(bNum)) {
+        return direcao === "asc" ? aNum - bNum : bNum - aNum;
       }
 
-      // strings / nullables
-      return direcao === "asc"
-        ? String(av ?? "").localeCompare(String(bv ?? ""))
-        : String(bv ?? "").localeCompare(String(av ?? ""));
-    });
+      const as = String(av ?? "");
+      const bs = String(bv ?? "");
+
+      return direcao === "asc" ? as.localeCompare(bs) : bs.localeCompare(as);
+    };
+
+    return [...dadosFiltrados].sort(cmpBase);
   }, [dadosFiltrados, ordenacao]);
 
   const paginados = useMemo(() => {
@@ -123,19 +137,18 @@ export function TabelaStatusPedidos({
     <div>
       <div className="flex items-center justify-between">
         <h2 className="text-lg text-zinc-800 font-semibold">{titulo}</h2>
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-3 items-center max-w-md w-full">
           <Input
-            placeholder="Pesquisar (seq, venda, status, empresa...)"
+            placeholder="Pesquisar (seq, interno, fornecedor, status...)"
             size="sm"
             startContent={<Search color="#77767b" size={14} />}
             value={filtro}
             onChange={(e) => setFiltro(e.target.value)}
           />
           <Button
-            className="bg-zinc-800 text-white"
+            color="primary"
             isLoading={loading}
             size="sm"
-            startContent={<RotateCw size={14} />}
             onPress={onRefresh}
           >
             Atualizar
@@ -200,7 +213,13 @@ export function TabelaStatusPedidos({
                 {pedido.codigoFornecedor ?? "-"}
               </TableCell>
               <TableCell className="text-center">
-                {pedido.statusIntegracao}
+                {pedido.statusIntegracao === "Finalizado" ? (
+                  <Chip>{pedido.statusIntegracao}</Chip>
+                ) : pedido.statusIntegracao === "Rejeitado" ? (
+                  <Chip color="danger">{pedido.statusIntegracao}</Chip>
+                ) : (
+                  <Chip color="warning">{pedido.statusIntegracao}</Chip>
+                )}
               </TableCell>
             </TableRow>
           )}
