@@ -5,5 +5,7 @@ export interface IStatusPedidoMultigiro {
   nroEmpresa: number;
   statusIntegracao: string;
   nroPedVenda: number;
+  codigoPedido: number | null;
+  codigoFornecedor: number | null;
   _expandables: string[] | number[] | null;
 }

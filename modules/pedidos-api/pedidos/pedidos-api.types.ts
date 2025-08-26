@@ -4,3 +4,10 @@ export interface IEnviarPedidoMultigiroPayload {
   codigoLoja: number;
   pedidoDeFraldas: boolean;
 }
+
+export type FalhaStatusPedido = {
+  seqPedido: string;
+  fornecedor: number;
+  statusHttp?: number;
+  message: string;
+};
