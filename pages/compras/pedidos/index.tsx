@@ -113,6 +113,35 @@ export default function IndexPage() {
     return () => ac.abort();
   }, []);
 
+  function extrairProdutosNaoEncontrados(
+    produtosNaoEncontrados: any[]
+  ): string[] {
+    if (!Array.isArray(produtosNaoEncontrados)) return [];
+
+    return produtosNaoEncontrados
+      .map((p) => {
+        const ean =
+          p?.cd_barra ??
+          p?.ean ??
+          p?.codigoEan ??
+          p?.codAcesso ??
+          p?.codigo_barras ??
+          p?.codigoBarras ??
+          p?.codigo ??
+          null;
+
+        const descricao =
+          p?.descricao ?? p?.descricaoProduto ?? p?.nome ?? p?.titulo ?? null;
+
+        if (ean && descricao) return `${ean} — ${descricao}`;
+        if (ean) return String(ean);
+        if (descricao) return String(descricao);
+
+        return null;
+      })
+      .filter((v): v is string => Boolean(v));
+  }
+
   function extrairEans(produtosNaoEncontrados: any[]): string[] {
     if (!Array.isArray(produtosNaoEncontrados)) return [];
 
@@ -210,7 +239,9 @@ export default function IndexPage() {
 
           // 🚨 Captura SUCESSO PARCIAL (206) vindo do backend
           if (data && data.statusCode === 206) {
-            const eans = extrairEans(data.produtosNaoEncontrados);
+            const eans = extrairProdutosNaoEncontrados(
+              data.produtosNaoEncontrados
+            );
 
             novosErros.push({
               id: crypto.randomUUID(),
@@ -221,10 +252,8 @@ export default function IndexPage() {
               eans,
             });
 
-            // mantém a linha no formulário para reenvio (mesma UX das falhas)
             failedRows.push(rowOrig);
           } else {
-            // 2xx normal → sucesso total
             sucesso += 1;
           }
         } else {
@@ -538,7 +567,11 @@ export default function IndexPage() {
           {/* ========= FIM: TABELA DE ERROS ========= */}
         </div>
       </form>
-      <Modal isOpen={isErroModalOpen} onOpenChange={setIsErroModalOpen}>
+      <Modal
+        isOpen={isErroModalOpen}
+        size="2xl"
+        onOpenChange={setIsErroModalOpen}
+      >
         <ModalContent>
           {(onClose) => (
             <>

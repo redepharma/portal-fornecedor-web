@@ -131,14 +131,16 @@ export function TabelaEstoquePorProduto({
         shadow="sm"
       >
         <TableHeader>
-          <TableColumn onClick={() => handleOrdenar("dsProd")}>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("dsProd")}>
             Descrição
           </TableColumn>
-          <TableColumn onClick={() => handleOrdenar("qtEst")}>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("qtEst")}>
             Estoque
           </TableColumn>
-          <TableColumn onClick={() => handleOrdenar("ean01")}>EAN</TableColumn>
-          <TableColumn onClick={() => handleOrdenar("cdProd")}>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("ean01")}>
+            EAN
+          </TableColumn>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("cdProd")}>
             Código
           </TableColumn>
         </TableHeader>

@@ -1,72 +1,49 @@
-import {
-  Divider,
-  Spinner,
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-} from "@heroui/react";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { addToast } from "@heroui/react";
 
 import DefaultLayout from "@/layouts/default";
-import { IStatusPedido } from "@/modules/compras/status-pedido/types/status-pedido.interface";
+import { MultigiroStatusService } from "@/modules/pedidos-api/pedidos/status-pedido.service";
+import { TabelaStatusPedidos } from "@/modules/compras/status-pedido/components/tabela-status-pedidos";
+import { IStatusPedidoMultigiro } from "@/modules/compras/status-pedido/types/status-pedido.interface";
 
-export default function IndexPage() {
-  const [pedidos, setPedidos] = useState<IStatusPedido[]>([]);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [isLoading, setIsLoading] = useState(false);
+export default function StatusPedidoPage() {
+  const [dados, setDados] = useState<IStatusPedidoMultigiro[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [pagina, setPagina] = useState(1);
+  const porPagina = 20;
+
+  const carregar = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await MultigiroStatusService.listar();
+
+      setDados(res);
+    } catch (e) {
+      addToast({
+        title: "Erro ao carregar status dos pedidos",
+        color: "danger",
+      });
+      setDados([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    carregar();
+  }, [carregar]);
 
   return (
     <DefaultLayout>
-      <h1 className="text-4xl font-bold text-zinc-800">Status Pedido</h1>
-      <Divider className="my-4" />
-      <div className="flex flex-col gap-2 mt-4">
-        <div
-          ref={scrollContainerRef}
-          className="overflow-y-auto"
-          style={{ height: "300px" }}
-        >
-          <Table
-            isCompact
-            isStriped
-            aria-label="Tabela de status de pedidos"
-            className="max-h-[280px] text-neutral-700 p-1"
-          >
-            <TableHeader>
-              <TableColumn key="seqPedido" allowsSorting>
-                SEQPEDIDO
-              </TableColumn>
-              <TableColumn key="loja" allowsSorting>
-                LOJA
-              </TableColumn>
-              <TableColumn key="statusIntegracao" allowsSorting>
-                STATUS INTEGRAÇÃO
-              </TableColumn>
-              <TableColumn key="nroPedVenda" allowsSorting>
-                Nº PEDIDO DA VENDA
-              </TableColumn>
-            </TableHeader>
-
-            <TableBody
-              emptyContent="Sem dados para exibir."
-              items={pedidos}
-              loadingContent={<Spinner label="Carregando..." />}
-              loadingState={isLoading ? "loading" : "idle"}
-            >
-              {(pedido: IStatusPedido) => (
-                <TableRow key={pedido.seqpedido}>
-                  <TableCell>{pedido.seqpedido}</TableCell>
-                  <TableCell>{pedido.nroEmpresa}</TableCell>
-                  <TableCell>{pedido.statusIntegracao}</TableCell>
-                  <TableCell>{pedido.nroPedVenda}</TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
+      <TabelaStatusPedidos
+        dados={dados}
+        loading={loading}
+        pagina={pagina}
+        porPagina={porPagina}
+        setPagina={setPagina}
+        titulo="Status Pedido"
+        onRefresh={carregar}
+      />
     </DefaultLayout>
   );
 }

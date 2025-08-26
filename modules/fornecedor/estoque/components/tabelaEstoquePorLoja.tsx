@@ -35,7 +35,14 @@ interface Props {
  * @param {Props} props - Propriedades do componente.
  * @returns {JSX.Element} Tabela com controle de paginação, filtro e exportação.
  */
-export function TabelaEstoquePorLoja({ estoque, pagina, porPagina, setPagina, loading, codigosFabricantes = [] }: Props) {
+export function TabelaEstoquePorLoja({
+  estoque,
+  pagina,
+  porPagina,
+  setPagina,
+  loading,
+  codigosFabricantes = [],
+}: Props) {
   const [filtro, setFiltro] = useState("");
   const [ordenacao, setOrdenacao] = useState<{
     coluna: keyof IEstoqueAgrupado | null;
@@ -133,17 +140,19 @@ export function TabelaEstoquePorLoja({ estoque, pagina, porPagina, setPagina, lo
         shadow="sm"
       >
         <TableHeader>
-          <TableColumn onClick={() => handleOrdenar("cdFilial")}>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("cdFilial")}>
             Filial
           </TableColumn>
-          <TableColumn onClick={() => handleOrdenar("dsProd")}>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("dsProd")}>
             Descrição
           </TableColumn>
-          <TableColumn onClick={() => handleOrdenar("qtEst")}>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("qtEst")}>
             Estoque
           </TableColumn>
-          <TableColumn onClick={() => handleOrdenar("ean01")}>EAN</TableColumn>
-          <TableColumn onClick={() => handleOrdenar("cdProd")}>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("ean01")}>
+            EAN
+          </TableColumn>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("cdProd")}>
             Código
           </TableColumn>
         </TableHeader>

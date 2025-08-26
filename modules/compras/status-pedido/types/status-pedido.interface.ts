@@ -1,6 +1,9 @@
-export interface IStatusPedido {
-  seqpedido: number;
+export interface IStatusPedidoMultigiro {
+  seqPedido: number;
+  seqCanalVenda: number;
+  idPedidoCanalVenda: string;
   nroEmpresa: number;
-  nroPedVenda: string;
   statusIntegracao: string;
+  nroPedVenda: number;
+  _expandables: string[] | number[] | null;
 }

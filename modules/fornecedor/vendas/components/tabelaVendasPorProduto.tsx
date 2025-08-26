@@ -171,20 +171,25 @@ export function TabelaVendasPorProduto({
         shadow="sm"
       >
         <TableHeader>
-          <TableColumn onClick={() => handleOrdenar("DS_PROD")}>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("DS_PROD")}>
             Descrição
           </TableColumn>
-          <TableColumn onClick={() => handleOrdenar("QT_IT")}>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("QT_IT")}>
             Quantidade
           </TableColumn>
-          <TableColumn onClick={() => handleOrdenar("VLR_LIQ_VD")}>
+          <TableColumn
+            allowsSorting
+            onClick={() => handleOrdenar("VLR_LIQ_VD")}
+          >
             Valor Líquido
           </TableColumn>
-          <TableColumn onClick={() => handleOrdenar("VLR_VD")}>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("VLR_VD")}>
             Valor Total
           </TableColumn>
-          <TableColumn onClick={() => handleOrdenar("EAN")}>EAN</TableColumn>
-          <TableColumn onClick={() => handleOrdenar("CD_PROD")}>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("EAN")}>
+            EAN
+          </TableColumn>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("CD_PROD")}>
             Código
           </TableColumn>
         </TableHeader>

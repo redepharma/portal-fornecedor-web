@@ -39,7 +39,16 @@ interface Props {
  * @param {Props} props - Propriedades do componente.
  * @returns {JSX.Element} Tabela de vendas paginada e filtrável.
  */
-export function TabelaVendasPorLoja({ vendas, pagina, porPagina, setPagina, loading, codigosFabricantes = [], dataInicio, dataFim }: Props) {
+export function TabelaVendasPorLoja({
+  vendas,
+  pagina,
+  porPagina,
+  setPagina,
+  loading,
+  codigosFabricantes = [],
+  dataInicio,
+  dataFim,
+}: Props) {
   const [baixandoExcel, setBaixandoExcel] = useState(false);
   const [filtro, setFiltro] = useState("");
   const [ordenacao, setOrdenacao] = useState<{
@@ -170,23 +179,28 @@ export function TabelaVendasPorLoja({ vendas, pagina, porPagina, setPagina, load
         shadow="sm"
       >
         <TableHeader>
-          <TableColumn onClick={() => handleOrdenar("CD_FILIAL")}>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("CD_FILIAL")}>
             Filial
           </TableColumn>
-          <TableColumn onClick={() => handleOrdenar("DS_PROD")}>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("DS_PROD")}>
             Descrição
           </TableColumn>
-          <TableColumn onClick={() => handleOrdenar("QT_IT")}>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("QT_IT")}>
             Quantidade
           </TableColumn>
-          <TableColumn onClick={() => handleOrdenar("VLR_LIQ_VD")}>
+          <TableColumn
+            allowsSorting
+            onClick={() => handleOrdenar("VLR_LIQ_VD")}
+          >
             Valor Líquido
           </TableColumn>
-          <TableColumn onClick={() => handleOrdenar("VLR_VD")}>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("VLR_VD")}>
             Valor Total
           </TableColumn>
-          <TableColumn onClick={() => handleOrdenar("EAN")}>EAN</TableColumn>
-          <TableColumn onClick={() => handleOrdenar("CD_PROD")}>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("EAN")}>
+            EAN
+          </TableColumn>
+          <TableColumn allowsSorting onClick={() => handleOrdenar("CD_PROD")}>
             Código
           </TableColumn>
         </TableHeader>
