@@ -1,6 +1,10 @@
 import axios from "axios";
 
-import { getToken, triggerLogoutRedirect } from "@/services/auth.service";
+import {
+  getToken,
+  refreshTokens,
+  triggerLogoutRedirect,
+} from "@/services/auth.service";
 import { getApiBaseUrl } from "@/shared/utils";
 
 /**
@@ -34,14 +38,26 @@ apiClient.interceptors.request.use((config) => {
 // Interceptor para tratar respostas, disparando logout se status 401
 apiClient.interceptors.response.use(
   (res) => res,
-  (error) => {
+  async (error) => {
     const status = error.response?.status;
+    const originalRequest = error.config as
+      | (typeof error.config & { _retry?: boolean })
+      | undefined;
 
-    if (status === 401) {
-      console.warn("[apiClient] 401 detectado → disparando logout.");
-      triggerLogoutRedirect(); // <- redirecionamento via AuthProvider
+    if (status === 401 && originalRequest && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const newToken = await refreshTokens();
+
+      if (newToken && originalRequest.headers) {
+        originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+
+        return apiClient(originalRequest);
+      }
+
+      console.warn("[apiClient] 401 detectado → refresh falhou.");
+      triggerLogoutRedirect();
     }
 
     return Promise.reject(error);
-  }
+  },
 );
