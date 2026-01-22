@@ -173,7 +173,7 @@ function FornecedorVendas() {
               description="Selecione um ou mais fabricantes"
               label="Fabricantes"
               selectedKeys={selecionados}
-              selectionMode="multiple"
+              selectionMode="single"
               variant="bordered"
               onSelectionChange={setSelecionados}
             >
