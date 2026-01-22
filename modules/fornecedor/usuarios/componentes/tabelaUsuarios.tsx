@@ -12,9 +12,10 @@ import {
 } from "@heroui/react";
 import { Trash2 } from "lucide-react";
 
+import { ModalRedefinirSenha } from "./modalRedefinirSenha";
+
 import { IUsuario } from "@/modules/fornecedor/usuarios/types/usuario.interface";
 import { ModalEditarUsuario } from "@/modules/fornecedor/usuarios/componentes/modalEditarusuario";
-import { ModalRedefinirSenha } from "./modalRedefinirSenha";
 
 interface UsuarioTableProps {
   usuarios: IUsuario[];
@@ -29,7 +30,11 @@ interface UsuarioTableProps {
  * @param {UsuarioTableProps} props - Propriedades do componente.
  * @returns {JSX.Element} Tabela de usuários com ações.
  */
-export function UsuarioTable({ usuarios, onExcluir, onAtualizar }: UsuarioTableProps) {
+export function UsuarioTable({
+  usuarios,
+  onExcluir,
+  onAtualizar,
+}: UsuarioTableProps) {
   return (
     <Table
       isHeaderSticky

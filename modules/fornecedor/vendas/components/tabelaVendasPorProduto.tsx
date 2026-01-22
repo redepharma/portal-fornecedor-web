@@ -96,7 +96,7 @@ export function TabelaVendasPorProduto({
     const filtradas = vendas.filter(
       (item) =>
         item.DS_PROD?.toLowerCase().includes(termo) ||
-        item.EAN?.toLowerCase().includes(termo)
+        item.EAN?.toLowerCase().includes(termo),
     );
 
     if (!ordenacao.coluna) return filtradas;
@@ -118,7 +118,7 @@ export function TabelaVendasPorProduto({
   const totalPaginas = Math.ceil(vendasFiltradas.length / porPagina);
   const vendasPaginadas = vendasFiltradas.slice(
     (pagina - 1) * porPagina,
-    pagina * porPagina
+    pagina * porPagina,
   );
 
   return (

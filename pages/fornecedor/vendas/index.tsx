@@ -1,5 +1,7 @@
 "use client";
 
+import type { Selection } from "@heroui/react";
+
 import { useEffect, useState } from "react";
 import {
   addToast,
@@ -14,7 +16,6 @@ import {
 import { DateValue } from "@internationalized/date";
 import { Select, SelectItem } from "@heroui/react";
 import { Eraser, Search } from "lucide-react";
-import type { Selection } from "@heroui/react";
 
 import DefaultLayout from "@/layouts/default";
 import { FornecedorService } from "@/modules/fornecedor/fornecedor.service";

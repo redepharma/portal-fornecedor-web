@@ -79,7 +79,7 @@ export function TabelaStatusPedidos({
       return campos.some((c) =>
         String(c ?? "")
           .toLowerCase()
-          .includes(termo)
+          .includes(termo),
       );
     });
   }, [dados, filtro]);
@@ -127,7 +127,7 @@ export function TabelaStatusPedidos({
 
   const totalPaginas = Math.max(
     1,
-    Math.ceil(dadosOrdenados.length / porPagina)
+    Math.ceil(dadosOrdenados.length / porPagina),
   );
   const exibindoDe =
     dadosOrdenados.length === 0 ? 0 : (pagina - 1) * porPagina + 1;

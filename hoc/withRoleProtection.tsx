@@ -18,7 +18,10 @@ import { useAuth } from "@/hooks/use-auth";
  * @param {Role[]} allowedRoles - Lista de roles permitidos para acessar o componente.
  * @returns {React.FC<P>} Componente protegido que realiza a checagem de permissão.
  */
-export function withRoleProtection<P extends JSX.IntrinsicAttributes>(WrappedComponent: React.ComponentType<P>, allowedRoles: Role[]) {
+export function withRoleProtection<P extends JSX.IntrinsicAttributes>(
+  WrappedComponent: React.ComponentType<P>,
+  allowedRoles: Role[],
+) {
   return function ProtectedComponent(props: P) {
     const { user, status } = useAuth();
     const router = useRouter();
@@ -27,7 +30,9 @@ export function withRoleProtection<P extends JSX.IntrinsicAttributes>(WrappedCom
       if (status === "unauthenticated") {
         router.push("/login");
       } else if (status === "authenticated" && user) {
-        const temPermissao = user.roles.some((role) => allowedRoles.includes(role));
+        const temPermissao = user.roles.some((role) =>
+          allowedRoles.includes(role),
+        );
 
         if (!temPermissao) {
           router.push("/acesso-negado"); // você pode trocar essa rota
@@ -37,7 +42,9 @@ export function withRoleProtection<P extends JSX.IntrinsicAttributes>(WrappedCom
 
     if (status !== "authenticated") return null; // ou um loading spinner
 
-    const temPermissao = user?.roles.some((role) => allowedRoles.includes(role));
+    const temPermissao = user?.roles.some((role) =>
+      allowedRoles.includes(role),
+    );
 
     if (!temPermissao) return null;
 

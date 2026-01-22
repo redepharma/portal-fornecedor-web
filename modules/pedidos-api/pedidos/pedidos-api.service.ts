@@ -15,7 +15,7 @@ type EnviarPedidoOpts = {
 export const PedidosService = {
   async enviarPedidoMultigiro(
     payload: IEnviarPedidoMultigiroPayload,
-    opts?: EnviarPedidoOpts
+    opts?: EnviarPedidoOpts,
   ): Promise<EnviarPedidoResposta> {
     try {
       const res = await apiPedidosClient.post<EnviarPedidoDTO>(
@@ -23,7 +23,7 @@ export const PedidosService = {
         payload,
         {
           signal: opts?.signal,
-        }
+        },
       );
 
       return res.data;

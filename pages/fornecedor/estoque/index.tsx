@@ -34,10 +34,10 @@ function FornecedorEstoque() {
   const [selecionados, setSelecionados] = useState<Selection>(new Set([]));
 
   const [estoqueAgrupado, setEstoqueAgrupado] = useState<IEstoqueAgrupado[]>(
-    []
+    [],
   );
   const [estoquePorFilial, setEstoquePorFilial] = useState<IEstoqueAgrupado[]>(
-    []
+    [],
   );
   const [loading, setLoading] = useState(false);
   const [pagina, setPagina] = useState(1);
@@ -75,11 +75,11 @@ function FornecedorEstoque() {
 
     try {
       const respostaAgrupados = await EstoqueService.consultarEstoque(
-        selecionadosArray.map(String)
+        selecionadosArray.map(String),
       );
 
       const respostaPorFilial = await EstoqueService.consultarEstoquePorFilial(
-        selecionadosArray.map(String)
+        selecionadosArray.map(String),
       );
 
       setEstoqueAgrupado(respostaAgrupados);

@@ -73,7 +73,7 @@ export function TabelaEstoquePorLoja({
     const filtrados = estoque.filter(
       (item) =>
         item.dsProd?.toLowerCase().includes(termo) ||
-        item.ean01?.toLowerCase().includes(termo)
+        item.ean01?.toLowerCase().includes(termo),
     );
 
     if (!ordenacao.coluna) return filtrados;

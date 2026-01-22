@@ -96,8 +96,18 @@ export function ModalRedefinirSenha({ usuario }: { usuario: IUsuario }) {
                   endContent={
                     <div className="flex items-center gap-1">
                       {senha && (
-                        <Tooltip showArrow content="Limpar senha" delay={200} radius="sm">
-                          <CircleX className="cursor-pointer" color="#5e5c64" size={16} onClick={() => setSenha("")} />
+                        <Tooltip
+                          showArrow
+                          content="Limpar senha"
+                          delay={200}
+                          radius="sm"
+                        >
+                          <CircleX
+                            className="cursor-pointer"
+                            color="#5e5c64"
+                            size={16}
+                            onClick={() => setSenha("")}
+                          />
                         </Tooltip>
                       )}
                       {mostrarSenha ? (

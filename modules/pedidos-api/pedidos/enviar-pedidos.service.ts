@@ -78,7 +78,7 @@ export const PedidosEnvioService = {
    */
   async enviar(
     payload: EnviarPedidoDTO,
-    opts?: EnviarOpts
+    opts?: EnviarOpts,
   ): Promise<EnviarPedidoResposta> {
     try {
       const res = await apiPedidosClient.post<EnviarPedidoResposta>(
@@ -88,7 +88,7 @@ export const PedidosEnvioService = {
           signal: opts?.signal,
           // aceitar 206 como "ok" (não cair no catch do Axios)
           validateStatus: (s) => (s >= 200 && s < 300) || s === 206,
-        }
+        },
       );
 
       // Se vier 206, devolve como tal; caso contrário, devolve o body (201)
@@ -104,20 +104,20 @@ export const PedidosEnvioService = {
    */
   async enviarTeste(
     payload: EnviarPedidoDTO,
-    opts?: EnviarOpts
+    opts?: EnviarOpts,
   ): Promise<EnviarPedidoTesteResposta> {
     try {
       const res = await apiPedidosClient.post<EnviarPedidoTesteResposta>(
         "/multigiro/enviar-teste",
         payload,
-        { signal: opts?.signal }
+        { signal: opts?.signal },
       );
 
       return Array.isArray(res.data) ? res.data : [];
     } catch (err) {
       throw parseAxiosError(
         err,
-        "Não foi possível enviar o pedido (modo teste)."
+        "Não foi possível enviar o pedido (modo teste).",
       );
     }
   },

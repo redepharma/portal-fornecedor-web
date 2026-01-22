@@ -9,11 +9,10 @@ import {
   TableCell,
   Pagination,
   Spinner,
-  Button,
   Input,
 } from "@heroui/react";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowDownToLine, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
 import { IEstoqueAgrupado } from "../types/estoqueAgrupado.interface";
 import { EstoqueService } from "../estoque.service";
@@ -74,7 +73,7 @@ export function TabelaEstoquePorProduto({
     const filtrados = estoque.filter(
       (item) =>
         item.dsProd?.toLowerCase().includes(termo) ||
-        item.ean01?.toLowerCase().includes(termo)
+        item.ean01?.toLowerCase().includes(termo),
     );
 
     if (!ordenacao.coluna) return filtrados;

@@ -1,7 +1,6 @@
 import { apiClient } from "../../api/api.client";
 
 import { CriarUsuarioDto } from "./types/criarUsuario.dto";
-import { RedefinirSenhaDto } from "./types/redefinirSenha.dto";
 import { UpdateUsuarioDto } from "./types/updateUsuario.dto";
 import { IUsuario } from "./types/usuario.interface";
 
@@ -22,7 +21,9 @@ export const listarUsuarios = async (): Promise<IUsuario[]> => {
  * @param {CriarUsuarioDto} usuario - Dados para criação do usuário.
  * @returns {Promise<IUsuario>} Promise com o usuário criado.
  */
-export const criarUsuario = async (usuario: CriarUsuarioDto): Promise<IUsuario> => {
+export const criarUsuario = async (
+  usuario: CriarUsuarioDto,
+): Promise<IUsuario> => {
   const { data } = await apiClient.post("/users", usuario);
 
   return data;
@@ -35,7 +36,10 @@ export const criarUsuario = async (usuario: CriarUsuarioDto): Promise<IUsuario> 
  * @param {UpdateUsuarioDto} usuario - Dados para atualização.
  * @returns {Promise<IUsuario>} Promise com o usuário atualizado.
  */
-export const atualizarUsuario = async (id: number, usuario: UpdateUsuarioDto): Promise<IUsuario> => {
+export const atualizarUsuario = async (
+  id: number,
+  usuario: UpdateUsuarioDto,
+): Promise<IUsuario> => {
   const { data } = await apiClient.patch(`/users/${id}`, usuario);
 
   return data;
@@ -48,7 +52,10 @@ export const atualizarUsuario = async (id: number, usuario: UpdateUsuarioDto): P
  * @param {string} senha - Nova senha.
  * @returns {Promise<IUsuario>} Promise com o usuário atualizado.
  */
-export const alterarSenhaUsuario = async (id: number, senha: string): Promise<IUsuario> => {
+export const alterarSenhaUsuario = async (
+  id: number,
+  senha: string,
+): Promise<IUsuario> => {
   const { data } = await apiClient.patch(`/users/${id}/senha`, { senha });
 
   return data;

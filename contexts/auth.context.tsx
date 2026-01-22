@@ -11,7 +11,9 @@ import * as AuthService from "@/services/auth.service";
  *
  * Fornece estado do usuário, status da autenticação e métodos para login/logout.
  */
-export const AuthContext = createContext<AuthContextData | undefined>(undefined);
+export const AuthContext = createContext<AuthContextData | undefined>(
+  undefined,
+);
 
 /**
  * Provedor de contexto para autenticação do usuário.
@@ -65,5 +67,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setStatus("unauthenticated");
   };
 
-  return <AuthContext.Provider value={{ user, status, login, logout, setUser }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, status, login, logout, setUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }

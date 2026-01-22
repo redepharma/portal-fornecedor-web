@@ -41,6 +41,7 @@ export default function LoginPage() {
         description: "Informe seu usuário e senha para continuar.",
         color: "danger",
       });
+
       return;
     }
 

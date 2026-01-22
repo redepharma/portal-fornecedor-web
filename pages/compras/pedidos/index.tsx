@@ -80,9 +80,9 @@ export default function IndexPage() {
     () =>
       rows.every(
         ({ loja, fornecedor, codigoPedido }) =>
-          Boolean(loja) && Boolean(fornecedor) && Boolean(codigoPedido)
+          Boolean(loja) && Boolean(fornecedor) && Boolean(codigoPedido),
       ),
-    [rows]
+    [rows],
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -114,7 +114,7 @@ export default function IndexPage() {
   }, []);
 
   function extrairProdutosNaoEncontrados(
-    produtosNaoEncontrados: any[]
+    produtosNaoEncontrados: any[],
   ): string[] {
     if (!Array.isArray(produtosNaoEncontrados)) return [];
 
@@ -155,7 +155,7 @@ export default function IndexPage() {
           p?.codigo_barras ??
           p?.codigoBarras ??
           p?.codigo ??
-          null
+          null,
       )
       .filter((v): v is string | number => v !== null)
       .map((v) => String(v));
@@ -187,7 +187,7 @@ export default function IndexPage() {
   function updateRow<K extends keyof Row>(
     index: number,
     key: K,
-    value: Row[K]
+    value: Row[K],
   ) {
     setRows((prev) => {
       const next = [...prev];
@@ -223,7 +223,7 @@ export default function IndexPage() {
             codigoLoja,
             pedidoDeFraldas,
           });
-        })
+        }),
       );
 
       let sucesso = 0;
@@ -240,7 +240,7 @@ export default function IndexPage() {
           // 🚨 Captura SUCESSO PARCIAL (206) vindo do backend
           if (data && data.statusCode === 206) {
             const eans = extrairProdutosNaoEncontrados(
-              data.produtosNaoEncontrados
+              data.produtosNaoEncontrados,
             );
 
             novosErros.push({
@@ -291,7 +291,7 @@ export default function IndexPage() {
                 fornecedor: "",
                 pedidoDeFraldas: false,
               },
-            ]
+            ],
       );
     } catch {
       addToast({ title: "Erro inesperado ao enviar pedidos." });
@@ -319,7 +319,7 @@ export default function IndexPage() {
             codigoLoja,
             pedidoDeFraldas,
           });
-        })
+        }),
       );
 
       const sucesso = results.filter((r) => r.status === "fulfilled").length;
@@ -357,7 +357,7 @@ export default function IndexPage() {
                 fornecedor: "",
                 pedidoDeFraldas: false,
               },
-            ]
+            ],
       );
     } catch {
       addToast({ title: "Erro inesperado ao enviar pedidos (teste)." });

@@ -97,7 +97,7 @@ export function TabelaVendasPorLoja({
     const filtradas = vendas.filter(
       (item) =>
         item.DS_PROD?.toLowerCase().includes(termo) ||
-        item.EAN?.toLowerCase().includes(termo)
+        item.EAN?.toLowerCase().includes(termo),
     );
 
     if (!ordenacao.coluna) return filtradas;

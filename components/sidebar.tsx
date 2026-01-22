@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, LogOut, Package, Users, PackagePlus } from "lucide-react";
+import { Home, LogOut, Package, Users } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Divider } from "@heroui/react";
 
@@ -34,7 +34,7 @@ export function Sidebar() {
         </NavItem>
 
         {/* Grupo Compras */}
-        <CollapsibleGroup
+        {/* <CollapsibleGroup
           currentPath={pathname}
           icon={<PackagePlus size={18} />}
           id="grp-compras"
@@ -49,7 +49,7 @@ export function Sidebar() {
             },
           ]}
           title="Compras"
-        />
+        /> */}
 
         {/* Grupo Fornecedor */}
         <CollapsibleGroup

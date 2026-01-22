@@ -42,7 +42,7 @@ export const MultigiroStatusService = {
           signal: opts?.signal,
           validateStatus: (s) =>
             s === 204 || s === 206 || s === 502 || (s >= 200 && s < 300),
-        }
+        },
       );
 
       if (res.status === 204) {
@@ -67,7 +67,7 @@ export const MultigiroStatusService = {
               signal: opts?.signal,
               validateStatus: (s) =>
                 s === 204 || s === 206 || s === 502 || (s >= 200 && s < 300),
-            }
+            },
           );
 
           if (res2.status === 204) {
@@ -84,13 +84,13 @@ export const MultigiroStatusService = {
         } catch (err2) {
           throw parseAxiosError(
             err2,
-            "Não foi possível consultar o status dos pedidos (rota singular)."
+            "Não foi possível consultar o status dos pedidos (rota singular).",
           );
         }
       }
       throw parseAxiosError(
         err,
-        "Não foi possível consultar o status dos pedidos."
+        "Não foi possível consultar o status dos pedidos.",
       );
     }
   },

@@ -30,10 +30,10 @@ export function CollapsibleGroup({
 }: CollapsibleGroupProps) {
   // abre se algum item for ativo OU se defaultOpen = true
   const hasActiveChild = items.some(
-    (it) => currentPath === it.href || currentPath.startsWith(it.href + "/")
+    (it) => currentPath === it.href || currentPath.startsWith(it.href + "/"),
   );
   const [open, setOpen] = React.useState<boolean>(
-    defaultOpen ?? hasActiveChild
+    defaultOpen ?? hasActiveChild,
   );
 
   // quando a rota mudar, mantém o grupo aberto se houver filho ativo

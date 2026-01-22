@@ -25,7 +25,9 @@ export const VendaService = {
    * @param dto Dados para filtro da consulta.
    * @returns Lista de vendas agrupadas por filial.
    */
-  async consultarVendasPorLoja(dto: ConsultaVendaDTO): Promise<IVendaPorFilial[]> {
+  async consultarVendasPorLoja(
+    dto: ConsultaVendaDTO,
+  ): Promise<IVendaPorFilial[]> {
     const response = await apiClient.post("/venda/consulta-por-filial", dto);
 
     return response.data.map((item: IVendaPorFilial) => ({

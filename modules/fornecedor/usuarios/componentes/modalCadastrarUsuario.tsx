@@ -34,7 +34,12 @@ const tiposUsuario = ["Fornecedor", "Comprador"];
  * @param {() => void} props.aoFechar - Função callback chamada após o fechamento do modal.
  * @returns {JSX.Element} Modal com formulário para cadastrar usuário.
  */
-export function ModalCadastrarUsuario({ aoFechar }: { aoFechar: () => void; aberto: boolean }) {
+export function ModalCadastrarUsuario({
+  aoFechar,
+}: {
+  aoFechar: () => void;
+  aberto: boolean;
+}) {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [form, setForm] = useState<CriarUsuarioDto>({
     nome: "",

@@ -86,14 +86,14 @@ function GerenciarUsuariosPage() {
     return usuarios.filter(
       (u) =>
         u.nome.toLowerCase().includes(termo) ||
-        u.username.toLowerCase().includes(termo)
+        u.username.toLowerCase().includes(termo),
     );
   }, [usuarios, filtro]);
 
   const totalPaginas = Math.ceil(usuariosFiltrados.length / porPagina);
   const usuariosPaginados = usuariosFiltrados.slice(
     (pagina - 1) * porPagina,
-    pagina * porPagina
+    pagina * porPagina,
   );
 
   return (

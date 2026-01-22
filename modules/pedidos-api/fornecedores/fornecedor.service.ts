@@ -11,7 +11,7 @@ export const FornecedorPedidosService = {
     try {
       const res = await apiPedidosClient.get<IFornecedorPedido[]>(
         "/fornecedores",
-        { signal: opts?.signal }
+        { signal: opts?.signal },
       );
 
       const data = Array.isArray(res.data) ? res.data : [];
